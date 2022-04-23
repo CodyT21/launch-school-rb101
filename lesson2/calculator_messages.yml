@@ -1,0 +1,7 @@
+
+welcome: 'Welcome to the calculator app!'
+functionality: 'Functionality is limited to addition, subtraction, multiplication, and division of 2 numbers (integer or float).'
+invalid_number: 'Invalid input. Please input either an integer or a float.'
+invalid_operator: 'Invalid input. Please enter 1, 2, 3, or 4.'
+continue: Would you like to perform another calucation? (Enter y to continue)'
+exit: 'Thank you for using the calculator app!'

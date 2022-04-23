@@ -1,6 +1,9 @@
 # Calculator application for RB101, Lesson 2 Walkthrough
 # frozen_string_literal: true
 
+require 'yaml'
+MESSAGES = YAML.load_file('calculator_messages.yml')
+
 def prompt(message)
   puts "=> #{message}"
 end
@@ -20,9 +23,8 @@ def valid_math_operation?(operation)
   valid_operations.include?(operation)
 end
 
-prompt('Welcome to the calculator app!')
-prompt('Functionality is limited to addition, subtraction, multiplication, and
-division of 2 numbers (integer or float).')
+prompt(MESSAGES['welcome'])
+prompt(MESSAGES['functionality'])
 
 # main loop
 loop do
@@ -39,7 +41,7 @@ loop do
       num1 = num1_str.to_f
       break
     else
-      prompt('Invalid input. Please input either an integer or a float.')
+      prompt(MESSAGES['invalid_number'])
     end
   end
 
@@ -54,7 +56,7 @@ loop do
       num2 = num2_str.to_f
       break
     else
-      prompt('Invalid input. Please input either an integer or a float.')
+      prompt(MESSAGES['invalid_number'])
     end
   end
 
@@ -72,7 +74,7 @@ loop do
     math_op = gets.chomp
     break if valid_math_operation?(math_op)
 
-    prompt('Invalid input. Please enter 1, 2, 3, or 4.')
+    prompt(MESSAGES['invalid_operator'])
   end
 
   # calculate and return result
@@ -86,8 +88,8 @@ loop do
 
   prompt(result)
 
-  prompt('Would you like to perform another calucation? (Enter y to continue)')
+  prompt(MESSAGES['continue'])
   break if !gets.chomp.downcase.start_with?('y')
 end
 
-prompt('Thank you for using the calculator app!')
+prompt(MESSAGES['exit'])
