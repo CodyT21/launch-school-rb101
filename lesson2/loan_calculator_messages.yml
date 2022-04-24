@@ -1,0 +1,9 @@
+
+welcome: 'Welcome to the loan monthly payment calculator app!'
+loan_amount_input: 'Enter your loan amount in dollars: '
+invalid_loan_amount: 'Invalid input. Enter only digits and do not include commas.'
+apr_input: 'Enter your APR as a percent: '
+invalid_apr: 'Invalid input. Enter your percentage without the percent sign, rounded to 2 decimals.'
+loan_duration_input: 'Enter your loan duration in years: '
+invalid_duration: 'Invalid input. That does not look like a number of years.'
+monthly_payment: 'Your monthly payment is: '
