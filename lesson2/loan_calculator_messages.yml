@@ -7,3 +7,5 @@ invalid_apr: 'Invalid input. Enter your percentage without the percent sign, rou
 loan_duration_input: 'Enter your loan duration in years: '
 invalid_duration: 'Invalid input. That does not look like a number of years.'
 monthly_payment: 'Your monthly payment is: '
+repeat: 'Would you like to do another calculation? (Enter y to continue)'
+exit: 'Thank you for using the loan monthly payment calculator app!'

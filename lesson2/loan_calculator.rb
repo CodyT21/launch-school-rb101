@@ -19,44 +19,53 @@ end
 
 prompt(MESSAGES['welcome'])
 
-loan_amount = nil
-apr = nil
-loan_duration = nil
-
-# get loan amount
+# main loop
 loop do
-  prompt(MESSAGES['loan_amount_input'])
-  str_loan_amount = gets.chomp
-  if valid_number?(str_loan_amount)
-    loan_amount = str_loan_amount.to_f
-    break
+  loan_amount = nil
+  apr = nil
+  loan_duration = nil
+
+  # get loan amount
+  loop do
+    prompt(MESSAGES['loan_amount_input'])
+    str_loan_amount = gets.chomp
+    if valid_number?(str_loan_amount)
+      loan_amount = str_loan_amount.to_f
+      break
+    end
+    prompt(MESSAGES['invalid_loan_amount'])
   end
-  prompt(MESSAGES['invalid_loan_amount'])
+
+  # get apr
+  loop do
+    prompt(MESSAGES['apr_input'])
+    str_apr = gets.chomp
+    if valid_number?(str_apr)
+      apr = str_apr.to_f / 100
+      break
+    end
+    prompt(MESSAGES['invalid_apr'])
+  end
+  monthly_apr = apr / 12
+
+  # get loan duration
+  loop do
+    prompt(MESSAGES['loan_duration_input'])
+    str_loan_duration = gets.chomp
+    if valid_number?(str_loan_duration)
+      loan_duration = str_loan_duration.to_f * 12
+      break
+    end
+    prompt(MESSAGES['invalid_duration'])
+  end
+
+  # calculate monthly payment
+  monthly_payment = loan_amount * (monthly_apr / (1 - (1 + monthly_apr)**(-loan_duration)))
+  prompt(MESSAGES['monthly_payment'] + "$#{monthly_payment.round(2)}")
+
+  # determine if another calculation will be performed
+  prompt(MESSAGES['repeat'])
+  break if !gets.chomp.downcase.start_with?('y')
 end
 
-# get apr
-loop do
-  prompt(MESSAGES['apr_input'])
-  str_apr = gets.chomp
-  if valid_number?(str_apr)
-    apr = str_apr.to_f / 100
-    break
-  end
-  prompt(MESSAGES['invalid_apr'])
-end
-monthly_apr = apr / 12
-
-# get loan duration
-loop do
-  prompt(MESSAGES['loan_duration_input'])
-  str_loan_duration = gets.chomp
-  if valid_number?(str_loan_duration)
-    loan_duration = str_loan_duration.to_f * 12
-    break
-  end
-  prompt(MESSAGES['invalid_duration'])
-end
-
-# calculate monthly payment
-monthly_payment = loan_amount * (monthly_apr / (1 - (1 + monthly_apr)**(-loan_duration)))
-prompt(MESSAGES['monthly_payment'] + "$#{monthly_payment.round(2)}")
+prompt(MESSAGES['exit'])
