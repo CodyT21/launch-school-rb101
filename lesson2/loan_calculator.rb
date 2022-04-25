@@ -64,7 +64,8 @@ loop do
   end
 
   # calculate monthly payment
-  monthly_payment = loan_amount * (monthly_apr / (1 - (1 + monthly_apr)**(-loan_duration)))
+  monthly_payment = loan_amount *
+                    (monthly_apr / (1 - (1 + monthly_apr)**(-loan_duration)))
   prompt(get_message('monthly_payment', 'en') + "$#{monthly_payment.round(2)}")
 
   # determine if another calculation will be performed
