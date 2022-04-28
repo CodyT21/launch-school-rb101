@@ -1,23 +1,11 @@
 # Rock, Paper, Scissors App
 # require "pry"
 
-VALID_CHOICES = ['rock', 'paper', 'scissors']
-VALID_OUTCOMES = {
-  'rock' => {
-    'rock' => 0,
-    'paper' => -1,
-    'scissors' => 1
-  },
-  'paper' => {
-    'rock' => 1,
-    'paper' => 0,
-    'scissors' => -1
-  },
-  'scissors' => {
-    'rock' => -1,
-    'paper' => 1,
-    'scissors' => 0
-  }
+VALID_CHOICES = %w(rock paper scissors)
+VALID_WINS = {
+  rock: 'scissors',
+  paper: 'rock',
+  scissors: 'paper'
 }
 
 def prompt(message)
@@ -29,13 +17,9 @@ def validate_choice(choice)
 end
 
 def display_winner(player, computer)
-  # 1 indicates player wins
-  # 0 indicates a tie
-  # -1 indicates player lost
-
-  if VALID_OUTCOMES[player][computer] == 0
+  if player == computer
     prompt 'It was a draw!'
-  elsif VALID_OUTCOMES[player][computer] == 1
+  elsif VALID_WINS[player.to_sym] == computer
     prompt "You win! #{player.capitalize} beats #{computer.capitalize}!"
   else
     prompt "Sorry you lost. #{computer.capitalize} beats #{player.capitalize}."
