@@ -28,9 +28,9 @@ end
 
 def validate_player_choice(player, game='1')
   if game == '1'
-    VALID_CHOICES_RPS.include?(player.downcase)
+    VALID_CHOICES_RPS.include?(player)
   else
-    VALID_CHOICES_RPSSL.include?(player.downcase)
+    VALID_CHOICES_RPSSL.include?(player)
   end
 end
 
@@ -40,21 +40,21 @@ end
 
 def display_winner(player, computer)
   if player_win?(player, computer)
-  prompt "You win! #{player.capitalize} beats #{computer.capitalize}!\n"
+    prompt "You win! #{player.capitalize} beats #{computer.capitalize}!"
   elsif player == computer
-    prompt "It was a draw!\n"
+    prompt 'It was a draw!'
   else
-    prompt "Sorry you lost. #{computer.capitalize} beats #{player.capitalize}.\n"
+    prompt "Sorry you lost. #{computer.capitalize} beats #{player.capitalize}."
   end
 end
 
 def display_score(player_wins, computer_wins)
   prompt("The player has #{player_wins} wins.")
-  prompt("The computer has #{computer_wins} wins.\n")
+  prompt("The computer has #{computer_wins} wins.")
 end
 
 # welcome user to game and determine game type
-prompt "Welcome to the Rock, Paper, Scissors App!\n"
+prompt 'Welcome to the Rock, Paper, Scissors App!'
 prompt <<-MSG
   Which game would you like to play?
     1 Rock, Paper, Scissors
@@ -62,10 +62,10 @@ prompt <<-MSG
   MSG
 
 # get game choice - either rps or rps + spock and lizard
-game_choice = gets.chomp
-until validate_game_choice(game_choice)
+game = gets.chomp
+until validate_game_choice(game)
   prompt 'Invalid input, enter only 1 or 2. Try again:'
-  game_choice = gets.chomp
+  game = gets.chomp
 end
 
 player_wins = 0
@@ -73,44 +73,43 @@ computer_wins = 0
 win_goal = 3
 until player_wins == win_goal || computer_wins == win_goal
   # get player choice
-  player_choice = ''
+  player = ''
   loop do
-    if game_choice == '1' # 1 corresponds to rock, paper, scissors
+    if game == '1' # 1 corresponds to rock, paper, scissors
       prompt "Choose one: #{VALID_CHOICES_RPS.join(', ')}"
     else
       prompt "Choose one: #{VALID_CHOICES_RPSSL.join(', ')}"
     end
-    player_choice = gets.chomp
+    player = gets.chomp
 
     # special case for s due to 'scissors' and 'spock'
-    if player_choice == 's' || player_choice == 'S'
-      prompt "Please enter either 'sc' for scissors or 'sp' for spock"
+    if player == 's' || player == 'S'
+      prompt "Please enter either 'sc' for scissors or 'sp' for spock."
       next
     end
-    
     # convert abbreviated choices back to full name choice
-    if player_choice.length == 1 || player_choice.length == 2
-      player_choice = ABBREVIATIONS[player_choice.downcase.to_sym]
+    if player.length == 1 || player.length == 2
+      player = ABBREVIATIONS[player.downcase.to_sym]
     end
 
-    break if validate_player_choice(player_choice, game_choice)
-    if game_choice == '1'
-      prompt 'Invalid input. Please enter either rock, paper, or scissors.\n'
+    break if validate_player_choice(player, game)
+    if game == '1'
+      prompt 'Invalid input. Please enter either rock, paper, or scissors.'
     else
-      prompt 'Invalid input. Please enter either r, p, sc, sp, or l\n'
+      prompt 'Invalid input. Please enter either r, p, sc, sp, or l'
     end
   end
 
   # get computer move
-  if game_choice == '1'
-    computer_choice = VALID_CHOICES_RPS.sample
+  if game == '1'
+    computer = VALID_CHOICES_RPS.sample
   else
-    computer_choice = VALID_CHOICES_RPSSL.sample
+    computer = VALID_CHOICES_RPSSL.sample
   end
 
-  display_winner(player_choice, computer_choice)
-  if player_choice != computer_choice
-    player_win?(player_choice, computer_choice) ? player_wins += 1 : computer_wins += 1
+  display_winner(player, computer)
+  unless player == computer
+    player_win?(player, computer) ? player_wins += 1 : computer_wins += 1
   end
 
   display_score(player_wins, computer_wins)
@@ -120,5 +119,8 @@ until player_wins == win_goal || computer_wins == win_goal
 end
 
 # prompt final winner message for first to the win goal
-player_wins == win_goal ? prompt("Congratulations! You won #{win_goal} games!") : 
-                          prompt("Sorry, you lost. The computer won #{win_goal} games.")
+if player_wins == win_goal
+  prompt("Congratulations! You're th grand champion!")
+else
+  prompt("Sorry, you lost. The computer won this time.")
+end
