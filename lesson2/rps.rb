@@ -10,6 +10,13 @@ VALID_WINS = {
   spock: %w(scissors rock),
   lizard: %w(spock paper)
 }
+ABBREVIATIONS = {
+  r: 'rock',
+  p: 'paper',
+  sc: 'scissors',
+  sp: 'spock',
+  l: 'lizard'
+}
 
 def prompt(message)
   puts "=> #{message}"
@@ -19,15 +26,22 @@ def validate_game_choice(game_choice)
   game_choice.match(/^[12]$/)
 end
 
-def validate_player_choice(player_choice, game_type='1')
-  if game_type == '1'
-    VALID_CHOICES_RPS.include?(player_choice.downcase)
+def validate_player_choice(player, game='1')
+  if game == '1'
+    VALID_CHOICES_RPS.include?(player.downcase) ||
+      VALID_CHOICES_RPS.include?(ABBREVIATIONS[player.downcase.to_sym])
   else
-    VALID_CHOICES_RPSSL.include?(player_choice.downcase)
+    VALID_CHOICES_RPSSL.include?(player.downcase) ||
+      VALID_CHOICES_RPSSL.include?(ABBREVIATIONS[player.downcase.to_sym])
   end
 end
 
 def display_winner(player, computer)
+  # convert abbreviated choices back to full name choice
+  if player.length == 1 || player.length == 2
+    player = ABBREVIATIONS[player.downcase.to_sym]
+  end
+
   if player == computer
     prompt 'It was a draw!'
   elsif VALID_WINS[player.to_sym].include?(computer)
@@ -61,6 +75,11 @@ loop do
       prompt "Choose one: #{VALID_CHOICES_RPSSL.join(', ')}"
     end
     player_choice = gets.chomp
+
+    if player_choice == 's' || player_choice == 'S'
+      prompt "Please enter either 'sc' for scissors or 'sp' for spock"
+      next
+    end
     break if validate_player_choice(player_choice, game_choice)
     if game_choice == '1'
       prompt 'Invalid input. Please enter either rock, paper, or scissors.'
