@@ -80,4 +80,15 @@ loop do # main loop
   end
   
   board[row][col] = '1' # add player move to board
+
+  # computer move - random sampling until an unplayed tile is found
+  loop do
+    row = [0, 1, 2].sample
+    col = [0, 1, 2].sample
+    if board[row][col] == '0'
+      board[row][col] = '2'
+      break
+    end
+  end
+
 end
