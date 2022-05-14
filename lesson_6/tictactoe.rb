@@ -65,48 +65,58 @@ board = {
   8 => ' ',
   9 => ' '
 }
+loop do # play again loop
+  loop do # main loop
+    display_board(board)
 
-loop do # main loop
+    # player move
+    key_str = ''
+    space_key = 0
+
+    loop do
+      # row of player move
+      prompt('Enter the space number for your next move (1 - 9): ')
+      key_str = gets.chomp
+      if !valid_input?(key_str)
+        prompt("Invalid input. Enter only an integer betwwen 1 and 9.")
+        next
+      end
+      space_key = key_str.to_i
+
+      break if valid_move?(space_key, board)
+      prompt('Invalid move. That space has already been played. Try again.')
+    end
+    board[space_key] = 'X' # add player move to board
+    break if board_full?(board) || find_winner(board) > 0
+
+    # computer move - random sampling until an unplayed tile is found
+    loop do
+      space_key = board.keys.sample
+      if board[space_key] == ' '
+        board[space_key] = 'O'
+        break
+      end
+    end
+
+    break if board_full?(board) || find_winner(board) > 0
+  end
+
   display_board(board)
-
-  # player move
-  key_str = ''
-  space_key = 0
-
-  loop do
-    # row of player move
-    prompt('Enter the space number for your next move (1 - 9): ')
-    key_str = gets.chomp
-    if !valid_input?(key_str)
-      prompt("Invalid input. Enter only an integer betwwen 1 and 9.")
-      next
-    end
-    space_key = key_str.to_i
-
-    break if valid_move?(space_key, board)
-    prompt('Invalid move. That space has already been played. Try again.')
-  end
-  board[space_key] = 'X' # add player move to board
-  break if board_full?(board) || find_winner(board) > 0
-
-  # computer move - random sampling until an unplayed tile is found
-  loop do
-    space_key = board.keys.sample
-    if board[space_key] == ' '
-      board[space_key] = 'O'
-      break
-    end
+  game_status = find_winner(board) # 0 for tie, 1 for player win, 2 for comp win
+  if game_status == 0
+    prompt("It's a tie!")
+  elsif game_status == 1
+    prompt('Congratulations, you won!')
+  else
+    prompt('Sorry, you lost this game.')
   end
 
-  break if board_full?(board) || find_winner(board) > 0
-end
-
-display_board(board)
-game_status = find_winner(board) # 0 for tie, 1 for player win, 2 for comp win
-if game_status == 0
-  prompt("It's a tie!")
-elsif game_status == 1
-  prompt('Congratulations, you won!')
-else
-  prompt('Sorry, you lost this game.')
+  # play again prompts
+  prompt('Would you like to play again (y/n): ')
+  if gets.chomp.downcase.start_with?('y')
+    board.each { |key, _| board[key] = ' ' }
+  else
+    prompt('Thank you for playing!')
+    break
+  end
 end
