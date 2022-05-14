@@ -4,8 +4,9 @@ make random choices and the board will be displayed after each set
 of moves.
 =end
 
+WINNING_OUTCOMES = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7],
+                    [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]]
 
-WINNING_OUTCOMES = [[1,2,3], [4,5,6], [7,8,9], [1,4,7], [2,5,8], [3,6,9], [1,5,9], [3,5,7]]
 def prompt(message)
   puts "=> #{message}"
 end
@@ -43,17 +44,16 @@ def find_winner(board)
   WINNING_OUTCOMES.each do |arr|
     if arr.all? { |key| board[key] == 'X' }
       return 1
-    elsif arr.all? { |key| board[key] == 'O'}
+    elsif arr.all? { |key| board[key] == 'O' }
       return 2
     end
-  end 
-  return 0
+  end
+  0
 end
 
 prompt('Welcome to the Tic Tac Toe game!')
 prompt('You will take turns playing with a computer player.')
 
-game_status = nil # 0 for tie, 1 for player win, 2 for computer win
 board = {
   1 => ' ',
   2 => ' ',
@@ -71,7 +71,7 @@ loop do # main loop
 
   # player move
   key_str = ''
-  space_key = nil
+  space_key = 0
 
   loop do
     # row of player move
@@ -86,9 +86,8 @@ loop do # main loop
     break if valid_move?(space_key, board)
     prompt('Invalid move. That space has already been played. Try again.')
   end
-  
   board[space_key] = 'X' # add player move to board
-  break if (board_full?(board) || find_winner(board) > 0)
+  break if board_full?(board) || find_winner(board) > 0
 
   # computer move - random sampling until an unplayed tile is found
   loop do
@@ -99,11 +98,11 @@ loop do # main loop
     end
   end
 
-  break if (board_full?(board) || find_winner(board) > 0)
+  break if board_full?(board) || find_winner(board) > 0
 end
 
 display_board(board)
-game_status = find_winner(board)
+game_status = find_winner(board) # 0 for tie, 1 for player win, 2 for comp win
 if game_status == 0
   prompt("It's a tie!")
 elsif game_status == 1
