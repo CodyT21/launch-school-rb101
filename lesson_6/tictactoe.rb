@@ -11,6 +11,19 @@ def prompt(message)
   puts "=> #{message}"
 end
 
+def joinor(nums, separator=', ', last_separator='or')
+  return "#{nums[0]} #{last_separator} #{nums[1]}" if nums.length == 2
+  str = ''
+  nums.each_with_index do |num, index|
+    if index < nums.length - 1
+      str += num.to_s + separator
+    else
+      str += "#{last_separator} #{num}"
+    end
+  end
+  str
+end
+
 # takes in board hash
 # outputs a 3 x 3 tictactoe board
 def display_board(board)
@@ -74,8 +87,7 @@ loop do # play again loop
     space_key = 0
 
     loop do
-      # row of player move
-      prompt('Enter the space number for your next move (1 - 9): ')
+      prompt('Choose a position to place a piece: ' + joinor((1..9).to_a))
       key_str = gets.chomp
       if !valid_input?(key_str)
         prompt("Invalid input. Enter only an integer betwwen 1 and 9.")
