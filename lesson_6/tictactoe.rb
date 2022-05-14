@@ -44,6 +44,10 @@ def display_board(board)
   end
 end
 
+def empty_spaces(board)
+  board.select { |_, value| value == ' ' }.keys
+end
+
 def valid_input?(move)
   move.match(/^[1-9]$/)
 end
@@ -92,7 +96,7 @@ loop do # play again loop
     space_key = 0
 
     loop do
-      prompt('Choose a position to place a piece: ' + joinor((1..9).to_a))
+      prompt('Choose a position to place a piece: ' + joinor(empty_spaces(board)))
       key_str = gets.chomp
       if !valid_input?(key_str)
         prompt("Invalid input. Enter only an integer betwwen 1 and 9.")
