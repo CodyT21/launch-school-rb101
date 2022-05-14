@@ -4,91 +4,110 @@ make random choices and the board will be displayed after each set
 of moves.
 =end
 
+
+WINNING_OUTCOMES = [[1,2,3], [4,5,6], [7,8,9], [1,4,7], [2,5,8], [3,6,9], [1,5,9], [3,5,7]]
 def prompt(message)
   puts "=> #{message}"
 end
 
-# takes in a 3 x 3 nested array of strings of '0', '1', or '2'
+# takes in board hash
 # outputs a 3 x 3 tictactoe board
 def display_board(board)
-  # convert '0' to empty space, '1' to an 'X', and '2' to an 'O'
-  converted_board = board.map do |row|
-    row.map do |num|
-      converted_num = case num
-                      when '1' then 'X'
-                      when '2' then 'O'
-                      else ' '
-                      end
-      converted_num
-    end
-  end
-
+  start_key = 1
+  end_key = 3
   # output board as string over 5 lines
-  converted_board.each_with_index do |row, index|
-    p row.join(' | ')
-    p '- + - + -' unless index == board.length - 1
+  loop do
+    puts board.fetch_values(start_key, end_key - 1, end_key).join(' | ')
+    puts '- + - + -' unless end_key == 9
+    start_key += 3
+    end_key += 3
+    break if end_key > 9
   end
 end
 
 def valid_input?(move)
-  move.match(/^[123]$/)
+  move.match(/^[1-9]$/)
 end
 
-# takes in a validated user index passed in as a 2 element array of
-# integers, and current board layout
+# takes in a validated user key and current board layout
 # outputs whether move interferes with any previous moves
-def valid_move?(index, board)
-  row = index[0]
-  col = index[1]
-  board[row][col] == '0'
+def valid_move?(key, board)
+  board[key] == ' '
+end
+
+def board_full?(board)
+  !board.values.any?(' ')
+end
+
+def find_winner(board)
+  WINNING_OUTCOMES.each do |arr|
+    if arr.all? { |key| board[key] == 'X' }
+      return 1
+    elsif arr.all? { |key| board[key] == 'O'}
+      return 2
+    end
+  end 
+  return 0
 end
 
 prompt('Welcome to the Tic Tac Toe game!')
 prompt('You will take turns playing with a computer player.')
 
-board = [['0', '0', '0'], ['0', '0', '0'], ['0', '0' ,'0']]
+game_status = nil # 0 for tie, 1 for player win, 2 for computer win
+board = {
+  1 => ' ',
+  2 => ' ',
+  3 => ' ',
+  4 => ' ',
+  5 => ' ',
+  6 => ' ',
+  7 => ' ',
+  8 => ' ',
+  9 => ' '
+}
+
 loop do # main loop
   display_board(board)
 
   # player move
-  row_str = ''
-  col_str = ''
-  row = nil
-  col = nil
+  key_str = ''
+  space_key = nil
 
   loop do
     # row of player move
-    prompt('Enter the row number for your next move (1, 2, or 3): ')
-    row_str = gets.chomp
-    if !valid_input?(row_str)
-      prompt("Invalid input. Enter only '1', '2', or '3'.")
+    prompt('Enter the space number for your next move (1 - 9): ')
+    key_str = gets.chomp
+    if !valid_input?(key_str)
+      prompt("Invalid input. Enter only an integer betwwen 1 and 9.")
       next
     end
-    
-    # col of player move
-    loop do
-      prompt('Enter the column number for your next move (1, 2, or 3): ')
-      col_str = gets.chomp
-      break if valid_input?(col_str)
-      prompt("Invalid input. Enter only '1', '2', or '3'.")
-    end
+    space_key = key_str.to_i
 
-    row = row_str.to_i - 1
-    col = col_str.to_i - 1
-    break if valid_move?([row, col], board)
+    break if valid_move?(space_key, board)
     prompt('Invalid move. That space has already been played. Try again.')
   end
   
-  board[row][col] = '1' # add player move to board
+  board[space_key] = 'X' # add player move to board
+  break if (board_full?(board) || find_winner(board) > 0)
 
   # computer move - random sampling until an unplayed tile is found
   loop do
-    row = [0, 1, 2].sample
-    col = [0, 1, 2].sample
-    if board[row][col] == '0'
-      board[row][col] = '2'
+    space_key = board.keys.sample
+    if board[space_key] == ' '
+      board[space_key] = 'O'
       break
     end
   end
 
+  break if (board_full?(board) || find_winner(board) > 0)
+end
+
+display_board(board)
+game_status = find_winner(board)
+if game_status == 0
+  prompt("It's a tie!")
+elsif game_status == 1
+  prompt('Congratulations, you won!')
+else
+  prompt('Sorry, you lost this game.')
 end
