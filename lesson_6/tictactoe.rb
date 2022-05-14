@@ -3,6 +3,7 @@ Program to simulate a tic-tac-toe game with a computer. Computer will
 make random choices and the board will be displayed after each set
 of moves.
 =end
+require 'pry'
 
 WINNING_OUTCOMES = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7],
                     [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]]
@@ -87,6 +88,34 @@ def display_scores(player_score, comp_score)
   end
 end
 
+def find_at_risk_spaces(line, board, marker='X')
+  if board.values_at(*line).count(marker) == 2
+    board.select { |key, value| line.include?(key) && value == ' ' }.keys.first
+  end
+end
+
+def computer_move(board)
+  space = nil
+  # offensive move
+  WINNING_OUTCOMES.each do |arr|
+    space = find_at_risk_spaces(arr, board, 'O')
+    break if space
+  end
+  # defensive move
+  if !space
+    WINNING_OUTCOMES.each do |arr|
+      space = find_at_risk_spaces(arr, board)
+      break if space
+    end
+  end
+  # random move unless space 5 is available
+  if !space
+    space = board[5] == ' ' ? 5 : empty_spaces(board).sample
+    # space = empty_spaces(board).sample
+  end
+  board[space] = 'O'
+end
+
 prompt('Welcome to the Tic Tac Toe game!')
 prompt('You will take turns playing with a computer player.')
 
@@ -129,15 +158,8 @@ while player_score < 5 && computer_score < 5
     board[space_key] = 'X' # add player move to board
     break if board_full?(board) || find_winner(board) > 0
 
-    # computer move - random sampling until an unplayed tile is found
-    loop do
-      space_key = board.keys.sample
-      if board[space_key] == ' '
-        board[space_key] = 'O'
-        break
-      end
-    end
-
+    # computer move
+    computer_move(board)
     break if board_full?(board) || find_winner(board) > 0
   end
 
