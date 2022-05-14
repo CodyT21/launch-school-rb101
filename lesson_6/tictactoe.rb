@@ -6,6 +6,7 @@ of moves.
 
 WINNING_OUTCOMES = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7],
                     [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]]
+NUM_GAMES = 5
 
 def prompt(message)
   puts "=> #{message}"
@@ -73,6 +74,19 @@ def find_winner(board)
   0
 end
 
+def display_scores(player_score, comp_score)
+  if player_score < NUM_GAMES && comp_score < NUM_GAMES
+    player_games_left = NUM_GAMES - player_score
+    comp_games_left = NUM_GAMES - comp_score
+    prompt("You've won #{player_score} games. Only #{player_games_left} to go!")
+    prompt("The computer has won #{comp_score} games. #{comp_games_left} left.")
+  elsif player_score == 5
+    prompt('Congratulations! You have won this round of games!')
+  else
+    prompt('Sorry, the computer has won this round. Better luck next time.')
+  end
+end
+
 prompt('Welcome to the Tic Tac Toe game!')
 prompt('You will take turns playing with a computer player.')
 
@@ -87,7 +101,12 @@ board = {
   8 => ' ',
   9 => ' '
 }
-loop do # play again loop
+# loop do # play again loop
+
+player_score = 0
+computer_score = 0
+
+while player_score < 5 && computer_score < 5
   loop do # main loop
     display_board(board)
 
@@ -96,7 +115,7 @@ loop do # play again loop
     space_key = 0
 
     loop do
-      prompt('Choose a position to place a piece: ' + joinor(empty_spaces(board)))
+      prompt('Choose a space for your move: ' + joinor(empty_spaces(board)))
       key_str = gets.chomp
       if !valid_input?(key_str)
         prompt("Invalid input. Enter only an integer betwwen 1 and 9.")
@@ -128,16 +147,22 @@ loop do # play again loop
     prompt("It's a tie!")
   elsif game_status == 1
     prompt('Congratulations, you won!')
+    player_score += 1
   else
     prompt('Sorry, you lost this game.')
+    computer_score += 1
   end
 
-  # play again prompts
-  prompt('Would you like to play again (y/n): ')
-  if gets.chomp.downcase.start_with?('y')
-    board.each { |key, _| board[key] = ' ' }
-  else
-    prompt('Thank you for playing!')
-    break
-  end
+  # reset board and display current win totals
+  board.each { |key, _| board[key] = ' ' }
+  display_scores(player_score, computer_score)
+
+  # # play again prompts
+  # prompt('Would you like to play again (y/n): ')
+  # if gets.chomp.downcase.start_with?('y')
+  #   board.each { |key, _| board[key] = ' ' }
+  # else
+  #   prompt('Thank you for playing!')
+  #   break
+  # end
 end
