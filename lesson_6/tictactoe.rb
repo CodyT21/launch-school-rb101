@@ -8,6 +8,8 @@ require 'pry'
 WINNING_OUTCOMES = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7],
                     [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]]
 NUM_GAMES = 5
+PLAYER_MARKER = 'X'
+COMPUTER_MARKER = 'O'
 
 def prompt(message)
   puts "=> #{message}"
@@ -66,9 +68,9 @@ end
 
 def find_winner(board)
   WINNING_OUTCOMES.each do |arr|
-    if arr.all? { |key| board[key] == 'X' }
+    if arr.all? { |key| board[key] == PLAYER_MARKER }
       return 1
-    elsif arr.all? { |key| board[key] == 'O' }
+    elsif arr.all? { |key| board[key] == COMPUTER_MARKER }
       return 2
     end
   end
@@ -88,17 +90,35 @@ def display_scores(player_score, comp_score)
   end
 end
 
-def find_at_risk_spaces(line, board, marker='X')
+def find_at_risk_spaces(line, board, marker=PLAYER_MARKER)
   if board.values_at(*line).count(marker) == 2
     board.select { |key, value| line.include?(key) && value == ' ' }.keys.first
   end
+end
+
+def player_move(board)
+  key_str = ''
+  space_key = 0
+
+  loop do
+    prompt('Choose a space for your move: ' + joinor(empty_spaces(board)))
+    key_str = gets.chomp
+    if !valid_input?(key_str)
+      prompt("Invalid input. Enter only an integer betwwen 1 and 9.")
+      next
+    end
+    space_key = key_str.to_i
+    break if valid_move?(space_key, board)
+    prompt('Invalid move. That space has already been played. Try again.')
+  end
+  board[space_key] = PLAYER_MARKER # add player move to board
 end
 
 def computer_move(board)
   space = nil
   # offensive move
   WINNING_OUTCOMES.each do |arr|
-    space = find_at_risk_spaces(arr, board, 'O')
+    space = find_at_risk_spaces(arr, board, COMPUTER_MARKER)
     break if space
   end
   # defensive move
@@ -113,7 +133,7 @@ def computer_move(board)
     space = board[5] == ' ' ? 5 : empty_spaces(board).sample
     # space = empty_spaces(board).sample
   end
-  board[space] = 'O'
+  board[space] = COMPUTER_MARKER
 end
 
 prompt('Welcome to the Tic Tac Toe game!')
@@ -139,26 +159,9 @@ while player_score < 5 && computer_score < 5
   loop do # main loop
     display_board(board)
 
-    # player move
-    key_str = ''
-    space_key = 0
-
-    loop do
-      prompt('Choose a space for your move: ' + joinor(empty_spaces(board)))
-      key_str = gets.chomp
-      if !valid_input?(key_str)
-        prompt("Invalid input. Enter only an integer betwwen 1 and 9.")
-        next
-      end
-      space_key = key_str.to_i
-
-      break if valid_move?(space_key, board)
-      prompt('Invalid move. That space has already been played. Try again.')
-    end
-    board[space_key] = 'X' # add player move to board
+    player_move(board)
     break if board_full?(board) || find_winner(board) > 0
 
-    # computer move
     computer_move(board)
     break if board_full?(board) || find_winner(board) > 0
   end
