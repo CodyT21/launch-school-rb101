@@ -12,16 +12,21 @@ def prompt(message)
 end
 
 def joinor(nums, separator=', ', last_separator='or')
-  return "#{nums[0]} #{last_separator} #{nums[1]}" if nums.length == 2
-  str = ''
-  nums.each_with_index do |num, index|
-    if index < nums.length - 1
-      str += num.to_s + separator
-    else
-      str += "#{last_separator} #{num}"
+  case nums.length
+  when 0 then ''
+  when 1 then nums.first.to_s
+  when 2 then nums.join(" #{last_separator} ")
+  else
+    str = ''
+    nums.each_with_index do |num, index|
+      if index < nums.length - 1
+        str += num.to_s + separator
+      else
+        str += "#{last_separator} #{num}"
+      end
     end
+    str
   end
-  str
 end
 
 # takes in board hash
