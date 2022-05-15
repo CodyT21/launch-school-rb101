@@ -136,6 +136,19 @@ def computer_move(board)
   board[space] = COMPUTER_MARKER
 end
 
+# will alternate current player; returns 0 for user player, 1 for computer player
+def alternate_player(current_player)
+  current_player == 0 ? 1 : 0
+end
+
+def place_move!(current_player, board)
+  if current_player == 0 # user player
+    player_move(board)
+  else
+    computer_move(board)
+  end
+end
+
 prompt('Welcome to the Tic Tac Toe game!')
 prompt('You will take turns playing with a computer player.')
 
@@ -154,16 +167,15 @@ board = {
 
 player_score = 0
 computer_score = 0
+current_player = 0 # user starts first
 
 while player_score < 5 && computer_score < 5
   loop do # main loop
     display_board(board)
-
-    player_move(board)
+    place_move!(current_player, board)
+    current_player = alternate_player(current_player)
     break if board_full?(board) || find_winner(board) > 0
-
-    computer_move(board)
-    break if board_full?(board) || find_winner(board) > 0
+    system('clear') # clear the terminal after each move to reduce clutter
   end
 
   display_board(board)
