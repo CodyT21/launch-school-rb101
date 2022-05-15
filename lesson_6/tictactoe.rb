@@ -136,7 +136,7 @@ def computer_move(board)
   board[space] = COMPUTER_MARKER
 end
 
-# will alternate current player; returns 0 for user player, 1 for computer player
+# will alternate current player; returns 0 for user, 1 for computer
 def alternate_player(current_player)
   current_player == 0 ? 1 : 0
 end
@@ -146,6 +146,28 @@ def place_move!(current_player, board)
     player_move(board)
   else
     computer_move(board)
+  end
+end
+
+def who_decides
+  prompt('Do you want to decide who plays first? (y/n)')
+  if gets.chomp.downcase.start_with?('y')
+    0 # user decides who plays first
+  else
+    1 # computer will randomly decide
+  end
+end
+
+def who_plays_first(decider)
+  if decider == 0 # user decides
+    prompt('Do you want to play first? (y/n)')
+    if gets.chomp.downcase.start_with?('y')
+      0 # user will player first
+    else
+      1 # computer will play first
+    end
+  else
+    [0, 1].sample
   end
 end
 
@@ -167,7 +189,10 @@ board = {
 
 player_score = 0
 computer_score = 0
-current_player = 0 # user starts first
+
+# user determines who chooses who plays first
+decider = who_decides
+current_player = who_plays_first(decider) # 0 for user, 1 for computer
 
 while player_score < 5 && computer_score < 5
   loop do # main loop
