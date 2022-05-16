@@ -97,7 +97,7 @@ def hit!(hands, deck, player=true)
   end
 end
 
-# busted will return boolean of whether hand passed in has exceeeded 21
+# busted will return boolean of whether hand passed in has exceeeded WINNING_NUM
 def busted?(hand)
   total = hand_total(hand)
   total > WINNING_NUM
@@ -191,7 +191,7 @@ loop do
     end
 
     if busted?(hands[1])
-      prompt('Sorry, you have gone over 21 and lost. Better luck next time!')
+      prompt("Sorry, you have gone over #{WINNING_NUM} and lost. Better luck next time!")
       break
     else
       prompt("You have chosen to stay.")
