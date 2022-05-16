@@ -4,7 +4,7 @@ except it is a more basic version. There are no splits, double downs,
 or other plays outside of the "hitting" and "staying"
 =end
 
-# require 'pry-byebug'
+require 'pry-byebug'
 
 def prompt(message)
   puts "=> #{message}"
@@ -91,6 +91,29 @@ def hit!(hands, deck, player=true)
   end
 end
 
+# busted will return boolean of whether hand passed in has exceeeded 21
+def busted?(hand)
+  card_values = card_str_to_values(hand)
+  total = card_values.sum
+  total > 21
+end
+
+# returns new array of integer values from array of card strings
+def card_str_to_values(hand)
+  card_values = []
+  hand.each do |card|
+    card_value = card.split[0]
+    card_values << if card_value.match(/(Jack|Queen|King)/)
+                     10
+                   elsif card_value.match('Ace')
+                     1 # ace_value(hand)
+                   else
+                     card.to_i
+                   end
+  end
+  card_values
+end
+
 def validate_input(str)
   valid_str = str.downcase.match(/^(hit|stay)$/)
   if !valid_str
@@ -103,9 +126,15 @@ end
 # deck = initialize_deck
 # hands = deal_hands!(deck)
 # display_hands(hands)
+
 # hit!(hands, deck)
+# p1 = busted?(hands[1])
 # hit!(hands, deck)
+# p2 = busted?(hands[1])
+
 # hit!(hands, deck, false)
+# d1 = busted?(hands[0])
 # hit!(hands, deck, false)
+# d2 = busted?(hands[1])
+
 # display_hands(hands)
-# puts deck
