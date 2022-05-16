@@ -21,19 +21,53 @@ end
 
 # deal cards return a nested array of 2 sets of cards
 # method will alter the deck hash that is passed in
-def deal_cards!(deck)
-  dealt_cards = []
+def deal_hands!(deck)
+  hands = []
   2.times do # loop for dealer and player
-    card_set = []
+    hand = []
     2.times do # loop for dealing 2 cards
       suit = [:hearts, :diamonds, :clubs, :spades].sample
       card = deck[suit].sample
       card_index = deck[suit].index(card)
       # binding.pry
       deck[suit].delete_at(card_index)
-      card_set << "#{card} of #{suit.to_s.capitalize}"
+      hand << "#{card} of #{suit.to_s.capitalize}"
     end
-    dealt_cards << card_set
+    hands << hand
   end
-  dealt_cards
+  hands # index 0 is the dealer hand, index 1 is the player hand
 end
+
+# helper method to improve appearance of printing each element from
+# and array with a custom separator and final separator
+def joinand(elems, separator=', ', last_separator='and')
+  case elems.length
+  when 0 then ''
+  when 1 then elems.first.to_s
+  when 2 then elems.join(" #{last_separator} ")
+  else
+    str = ''
+    elems.each_with_index do |num, index|
+      str << if index < elems.length - 1
+               num.to_s + separator
+             else
+               "#{last_separator} #{num}"
+             end
+    end
+    str
+  end
+end
+
+def display_cards(hands)
+  hands.each do |hand|
+    if hands.index(hand) == 0 # dealer hand - display random card
+      prompt("Dealer has: #{hand.sample} and unknown card")
+    else
+      prompt("Player has: #{joinand(hand)}")
+    end
+  end
+end
+
+# deck = initialize_deck
+# hands = deal_hands!(deck)
+# display_cards(hands)
