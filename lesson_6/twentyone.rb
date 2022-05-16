@@ -98,8 +98,8 @@ def hit!(hands, deck, player=true)
 end
 
 # busted will return boolean of whether hand passed in has exceeeded WINNING_NUM
-def busted?(hand)
-  total = hand_total(hand)
+def busted?(total)
+  # total = hand_total(hand)
   total > WINNING_NUM
 end
 
@@ -139,27 +139,25 @@ end
 
 # calculates and compare totals if both users stay
 # returns true if player has won the round
-def player_wins?(hands)
-  dealer_total = hand_total(hands[0])
-  player_total = hand_total(hands[1])
+def player_wins?(player_total, dealer_total)
+  # dealer_total = hand_total(hands[0])
+  # player_total = hand_total(hands[1])
   player_total > dealer_total
 end
 
 # displays winner message output
-def display_winner(hands)
+def display_winner(hands, player_total, dealer_total)
   prompt('The final hands are: ')
   display_hands(hands, true)
   puts
   sleep(1)
-  dealer_total = hand_total(hands[0])
-  player_total = hand_total(hands[1])
   prompt('The final hand totals are: ')
   prompt("Dealer: #{dealer_total}")
   prompt("Player: #{player_total}")
 
   if dealer_total == player_total
     prompt('This round is a tie.')
-  elsif player_wins?(hands)
+  elsif player_wins?(player_total, dealer_total)
     prompt('You won this round!')
   else
     prompt('Sorry the dealer won this round.')
@@ -171,7 +169,9 @@ loop do
   deck = initialize_deck
   hands = deal_hands!(deck)
   display_hands(hands)
-  prompt("Player total is: #{hand_total(hands[1])}")
+  player_total = hand_total(hands[1])
+  dealer_total = hand_total(hands[0])
+  prompt("Player total is: #{player_total}")
 
   1.times do
     # player turn
@@ -184,13 +184,14 @@ loop do
       end
       if user_response.downcase == 'hit'
         hit!(hands, deck)
+        player_total = hand_total(hands[1])
         prompt("You're card is: #{hands[1].last}")
-        prompt("You're total is: #{hand_total(hands[1])}")
+        prompt("You're total is: #{player_total}")
       end
-      break if user_response == 'stay' || busted?(hands[1])
+      break if user_response == 'stay' || busted?(player_total)
     end
 
-    if busted?(hands[1])
+    if busted?(player_total)
       prompt("Sorry, you have gone over #{WINNING_NUM} and lost. Better luck next time!")
       break
     else
@@ -200,22 +201,23 @@ loop do
     end
 
     # dealer turn
-    until hand_total(hands[0]) >= DEALER_LIMIT || busted?(hands[0])
+    until dealer_total >= DEALER_LIMIT || busted?(dealer_total)
       prompt('Dealer hits.')
       hit!(hands, deck, false)
+      dealer_total = hand_total(hands[0])
       prompt("Dealer's card is: #{hands[0].last}")
       sleep(1)
       puts
     end
 
-    if busted?(hands[0])
+    if busted?(dealer_total)
       prompt('Dealer busted! You win this round!')
       break
     end
 
     prompt('Dealer will stay')
     puts
-    display_winner(hands)
+    display_winner(hands, player_total, dealer_total)
   end
 
   puts
