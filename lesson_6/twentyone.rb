@@ -76,7 +76,7 @@ def display_hands(hands, for_winner=false)
     if hands.index(hand) == 0 # dealer hand - display random card
       if for_winner
         prompt("Dealer has: #{joinand(hand)}")
-      else  
+      else
         hand_length = hand.length
         prompt("Dealer has: #{joinand(hand[1, hand_length])} and unknown card")
       end
@@ -153,7 +153,7 @@ loop do
   display_hands(hands)
   prompt("Player total is: #{hand_total(hands[1])}")
 
-  1.times do 
+  1.times do
     # player turn
     loop do
       puts 'hit or stay?'
