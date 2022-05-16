@@ -153,7 +153,9 @@ def display_winner(hands)
   prompt("Dealer: #{hand_total(hands[0])}")
   prompt("Player: #{hand_total(hands[1])}")
 
-  if player_wins?(hands)
+  if hand_total(hands[0]) == hand_total(hands[1])
+    prompt('This round is a tie.')
+  elsif player_wins?(hands)
     prompt('You won this round!')
   else
     prompt('Sorry the dealer won this round.')
@@ -212,6 +214,7 @@ loop do
     display_winner(hands)
   end
 
+  puts
   prompt('Would you like to play again (y/n): ')
   break if !gets.chomp.downcase.start_with?('y')
 end
