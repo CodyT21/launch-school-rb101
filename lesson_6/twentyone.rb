@@ -104,17 +104,30 @@ end
 # returns new array of integer values from array of card strings
 def hand_total(hand)
   card_values = []
-  hand.each do |card|
+  aces = hand.select { |card| card.include?('Ace') }
+  non_ace_cards = hand.select { |card| !card.include?('Ace') }
+  non_ace_cards.each do |card|
     card_value = card.split[0]
     card_values << if card_value.match(/(Jack|Queen|King)/)
                      10
-                   elsif card_value.match('Ace')
-                     1 # ace_value(hand)
                    else
                      card.to_i
                    end
   end
+  ace_value!(aces, card_values)
   card_values.sum
+end
+
+# calculates value for ace depending on current cards in hand
+# add ace values to card_values array that is passed in
+def ace_value!(aces, card_values)
+  aces.each do
+    card_values << if aces.length == 1
+                     card_values.sum < 11 ? 11 : 1
+                   else
+                     card_values.sum < 11 - aces.length ? 11 : 1
+                   end
+  end
 end
 
 # determines if user inputs a string of hit or stay
@@ -139,6 +152,7 @@ def display_winner(hands)
   prompt('The final hand totals are: ')
   prompt("Dealer: #{hand_total(hands[0])}")
   prompt("Player: #{hand_total(hands[1])}")
+
   if player_wins?(hands)
     prompt('You won this round!')
   else
