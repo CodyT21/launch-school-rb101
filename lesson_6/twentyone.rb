@@ -71,11 +71,15 @@ def joinand(elems, separator=', ', last_separator='and')
   end
 end
 
-def display_hands(hands)
+def display_hands(hands, for_winner=false)
   hands.each do |hand|
     if hands.index(hand) == 0 # dealer hand - display random card
-      hand_length = hand.length
-      prompt("Dealer has: #{joinand(hand[1, hand_length])} and unknown card")
+      if for_winner
+        prompt("Dealer has: #{joinand(hand)}")
+      else  
+        hand_length = hand.length
+        prompt("Dealer has: #{joinand(hand[1, hand_length])} and unknown card")
+      end
     else
       prompt("Player has: #{joinand(hand)}")
     end
@@ -126,32 +130,75 @@ def player_wins?(hands)
   player_total > dealer_total
 end
 
-# main program logic
-deck = initialize_deck
-hands = deal_hands!(deck)
-display_hands(hands)
-prompt("Player total is: #{hand_total(hands[1])}")
-
-# player turn
-loop do
-  puts 'hit or stay?'
-  user_response = gets.chomp
-  if !valid_input?(user_response)
-    prompt("Invalid input. Please enter either 'hit' or 'stay'.")
-    next
-  end
-  if user_response.downcase == 'hit'
-    hit!(hands, deck)
-    prompt("You're card is: #{hands[1].last}")
-    prompt("You're total is: #{hand_total(hands[1])}")
-  end
-  break if user_response == 'stay' || busted?(hands[1])
-end
-
-if busted?(hands[1])
-  prompt('Sorry, you have gone over 21 and lost. Better luck next time!')
-else
-  prompt("You have chosen to stay.")
+# displays winner message output
+def display_winner(hands)
+  prompt('The final hands are: ')
+  display_hands(hands, true)
   puts
-  prompt("It is now the dealer's turn!")
+  sleep(1)
+  prompt('The final hand totals are: ')
+  prompt("Dealer: #{hand_total(hands[0])}")
+  prompt("Player: #{hand_total(hands[1])}")
+  if player_wins?(hands)
+    prompt('You won this round!')
+  else
+    prompt('Sorry the dealer won this round.')
+  end
 end
+
+# main program logic
+loop do
+  deck = initialize_deck
+  hands = deal_hands!(deck)
+  display_hands(hands)
+  prompt("Player total is: #{hand_total(hands[1])}")
+
+  1.times do 
+    # player turn
+    loop do
+      puts 'hit or stay?'
+      user_response = gets.chomp
+      if !valid_input?(user_response)
+        prompt("Invalid input. Please enter either 'hit' or 'stay'.")
+        next
+      end
+      if user_response.downcase == 'hit'
+        hit!(hands, deck)
+        prompt("You're card is: #{hands[1].last}")
+        prompt("You're total is: #{hand_total(hands[1])}")
+      end
+      break if user_response == 'stay' || busted?(hands[1])
+    end
+
+    if busted?(hands[1])
+      prompt('Sorry, you have gone over 21 and lost. Better luck next time!')
+      break
+    else
+      prompt("You have chosen to stay.")
+      puts
+      prompt("It is now the dealer's turn!")
+    end
+
+    # dealer turn
+    until hand_total(hands[0]) >= 17 || busted?(hands[0])
+      prompt('Dealer hits.')
+      hit!(hands, deck, false)
+      prompt("Dealer's card is: #{hands[0].last}")
+      sleep(1)
+      puts
+    end
+
+    if busted?(hands[0])
+      prompt('Dealer busted! You win this round!')
+      break
+    end
+
+    prompt('Dealer will stay')
+    puts
+    display_winner(hands)
+  end
+
+  prompt('Would you like to play again (y/n): ')
+  break if !gets.chomp.downcase.start_with?('y')
+end
+prompt('Thank you for playing!')
