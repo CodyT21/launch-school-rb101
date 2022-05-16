@@ -4,7 +4,9 @@ except it is a more basic version. There are no splits, double downs,
 or other plays outside of the "hitting" and "staying"
 =end
 
-require 'pry-byebug'
+# require 'pry-byebug'
+WINNING_NUM = 21
+DEALER_LIMIT = 17
 
 def prompt(message)
   puts "=> #{message}"
@@ -98,7 +100,7 @@ end
 # busted will return boolean of whether hand passed in has exceeeded 21
 def busted?(hand)
   total = hand_total(hand)
-  total > 21
+  total > WINNING_NUM
 end
 
 # returns new array of integer values from array of card strings
@@ -149,8 +151,8 @@ def display_winner(hands)
   display_hands(hands, true)
   puts
   sleep(1)
-  dealer_total = hand_totals(hands[0])
-  player_total = hand_totals(hands[1])
+  dealer_total = hand_total(hands[0])
+  player_total = hand_total(hands[1])
   prompt('The final hand totals are: ')
   prompt("Dealer: #{dealer_total}")
   prompt("Player: #{player_total}")
@@ -198,7 +200,7 @@ loop do
     end
 
     # dealer turn
-    until hand_total(hands[0]) >= 17 || busted?(hands[0])
+    until hand_total(hands[0]) >= DEALER_LIMIT || busted?(hands[0])
       prompt('Dealer hits.')
       hit!(hands, deck, false)
       prompt("Dealer's card is: #{hands[0].last}")
