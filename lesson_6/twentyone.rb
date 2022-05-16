@@ -91,6 +91,15 @@ def hit!(hands, deck, player=true)
   end
 end
 
+def validate_input(str)
+  valid_str = str.downcase.match(/^(hit|stay)$/)
+  if !valid_str
+    prompt("Invalid input. Please enter either 'hit' or 'stay'.")
+  else
+    valid_str
+  end
+end
+
 # deck = initialize_deck
 # hands = deal_hands!(deck)
 # display_hands(hands)
