@@ -93,13 +93,12 @@ end
 
 # busted will return boolean of whether hand passed in has exceeeded 21
 def busted?(hand)
-  card_values = card_str_to_values(hand)
-  total = card_values.sum
+  total = hand_total(hand)
   total > 21
 end
 
 # returns new array of integer values from array of card strings
-def card_str_to_values(hand)
+def hand_total(hand)
   card_values = []
   hand.each do |card|
     card_value = card.split[0]
@@ -111,41 +110,48 @@ def card_str_to_values(hand)
                      card.to_i
                    end
   end
-  card_values
+  card_values.sum
 end
 
 # determines if user inputs a string of hit or stay
-def validate_input(str)
-  valid_str = str.downcase.match(/^(hit|stay)$/)
-  if !valid_str
-    prompt("Invalid input. Please enter either 'hit' or 'stay'.")
-  else
-    valid_str
-  end
+def valid_input?(str)
+  str.downcase.match(/^(hit|stay)$/)
 end
 
 # calculates and compare totals if both users stay
 # returns true if player has won the round
 def player_wins?(hands)
-  dealer_total = card_str_to_values(hands[0]).sum
-  player_total = card_str_to_values(hands[1]).sum
+  dealer_total = hand_total(hands[0])
+  player_total = hand_total(hands[1])
   player_total > dealer_total
 end
 
-# deck = initialize_deck
-# hands = deal_hands!(deck)
-# display_hands(hands)
+# main program logic
+deck = initialize_deck
+hands = deal_hands!(deck)
+display_hands(hands)
+prompt("Player total is: #{hand_total(hands[1])}")
 
-# hit!(hands, deck)
-# p1 = busted?(hands[1])
-# hit!(hands, deck)
-# p2 = busted?(hands[1])
+# player turn
+loop do
+  puts 'hit or stay?'
+  user_response = gets.chomp
+  if !valid_input?(user_response)
+    prompt("Invalid input. Please enter either 'hit' or 'stay'.")
+    next
+  end
+  if user_response.downcase == 'hit'
+    hit!(hands, deck)
+    prompt("You're card is: #{hands[1].last}")
+    prompt("You're total is: #{hand_total(hands[1])}")
+  end
+  break if user_response == 'stay' || busted?(hands[1])
+end
 
-# hit!(hands, deck, false)
-# d1 = busted?(hands[0])
-# hit!(hands, deck, false)
-# d2 = busted?(hands[1])
-
-# display_hands(hands)
-# puts 'player wins' if player_wins?(hands)
-# puts deck
+if busted?(hands[1])
+  prompt('Sorry, you have gone over 21 and lost. Better luck next time!')
+else
+  prompt("You have chosen to stay.")
+  puts
+  prompt("It is now the dealer's turn!")
+end
