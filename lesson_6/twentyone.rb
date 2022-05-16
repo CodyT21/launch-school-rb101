@@ -82,8 +82,7 @@ def display_hands(hands)
   end
 end
 
-# hit! will mutate the hands array to add a card for the designated player/dealer
-# deck will also be mutated
+# hit! will mutate the hands array and deck hash
 def hit!(hands, deck, player=true)
   if player
     hands[1] << deal_card!(deck)
