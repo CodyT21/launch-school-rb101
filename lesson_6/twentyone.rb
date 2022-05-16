@@ -114,6 +114,7 @@ def card_str_to_values(hand)
   card_values
 end
 
+# determines if user inputs a string of hit or stay
 def validate_input(str)
   valid_str = str.downcase.match(/^(hit|stay)$/)
   if !valid_str
@@ -121,6 +122,14 @@ def validate_input(str)
   else
     valid_str
   end
+end
+
+# calculates and compare totals if both users stay
+# returns true if player has won the round
+def player_wins?(hands)
+  dealer_total = card_str_to_values(hands[0]).sum
+  player_total = card_str_to_values(hands[1]).sum
+  player_total > dealer_total
 end
 
 # deck = initialize_deck
@@ -138,3 +147,5 @@ end
 # d2 = busted?(hands[1])
 
 # display_hands(hands)
+# puts 'player wins' if player_wins?(hands)
+# puts deck
