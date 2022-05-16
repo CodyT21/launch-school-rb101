@@ -58,7 +58,7 @@ def joinand(elems, separator=', ', last_separator='and')
   end
 end
 
-def display_cards(hands)
+def display_hands(hands)
   hands.each do |hand|
     if hands.index(hand) == 0 # dealer hand - display random card
       prompt("Dealer has: #{hand.sample} and unknown card")
@@ -70,4 +70,4 @@ end
 
 # deck = initialize_deck
 # hands = deal_hands!(deck)
-# display_cards(hands)
+# display_hands(hands)
