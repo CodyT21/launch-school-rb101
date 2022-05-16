@@ -149,11 +149,13 @@ def display_winner(hands)
   display_hands(hands, true)
   puts
   sleep(1)
+  dealer_total = hand_totals(hands[0])
+  player_total = hand_totals(hands[1])
   prompt('The final hand totals are: ')
-  prompt("Dealer: #{hand_total(hands[0])}")
-  prompt("Player: #{hand_total(hands[1])}")
+  prompt("Dealer: #{dealer_total}")
+  prompt("Player: #{player_total}")
 
-  if hand_total(hands[0]) == hand_total(hands[1])
+  if dealer_total == player_total
     prompt('This round is a tie.')
   elsif player_wins?(hands)
     prompt('You won this round!')
