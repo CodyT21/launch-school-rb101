@@ -7,8 +7,8 @@ and adverbs into that text that it prints out.
 The list of nouns, verbs, adjectives, and adverbs will be built
 into the program and not from a separate file.
 
-Input text will specify the location of the words to be inserted by either text reading
-either '%{noun}', '%{verb}', '%{adjective}', or '%{adverb}'. The file text
+Input text will specify the location of the words to be inserted by either
+'%{noun}', '%{verb}', '%{adjective}', or '%{adverb}'. The file text
 will not be changed when this program is ran.
 
 =end
@@ -22,12 +22,16 @@ file = File.open('madlibs_text.txt')
 file_text = file.readlines.map(&:chomp)
 madlibs_text = file_text.map do |line|
   line.split.map do |word|
-    case
-    when word.include?('%{noun}') then word.gsub('%{noun}', NOUNS.sample)
-    when word.include?('%{verb}') then word.gsub('%{verb}', VERBS.sample)
-    when word.include?('%{adjective}') then word.gsub('%{adjective}', ADJECTIVES.sample)
-    when word.include?('%{adverb}') then word.gsub('%{adverb}', ADVERBS.sample)
-    else word
+    if word.include?('%{noun}')
+      word.gsub('%{noun}', NOUNS.sample)
+    elsif word.include?('%{verb}')
+      word.gsub('%{verb}', VERBS.sample)
+    elsif word.include?('%{adjective}')
+      word.gsub('%{adjective}', ADJECTIVES.sample)
+    elsif word.include?('%{adverb}')
+      word.gsub('%{adverb}', ADVERBS.sample)
+    else
+      word
     end
   end.join(' ')
 end
