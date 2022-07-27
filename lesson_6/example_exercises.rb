@@ -1428,3 +1428,191 @@ require 'pry-byebug'
 # p find_even_index([20, 10, -80, 10, 10, 15, 35]) == 0
 # p find_even_index([10, -80, 10, 10, 15, 35, 20]) == 6
 # p find_even_index([-1, -2, -3, -4, -3, -2, -1]) == 3
+
+
+# input - array of integers
+# output - new array of integers
+# rules
+#   - in the output array, each element corresponds to the count of unique numbers smaller than element at that index
+#   - repeating numbers should only be countd once when comparing numbers
+#   - if there are no elements smaller, 0 will be in the output array
+# algorithm
+#   - loop through each element in the input array
+#   - at each element, compare with a set of unique elements in the array, count how many elements are smaller
+#   - add count to output array and move to next element
+
+# def smaller_numbers_than_current(arr)
+#   # find unique elements
+#   unique_eles = []
+#   arr.each do |num|
+#     unique_eles << num if !unique_eles.include?(num)
+#   end
+
+#   arr.map do |num|
+#     unique_eles.count { |ele| ele < num }
+#   end
+# end
+
+# p smaller_numbers_than_current([8,1,2,2,3]) == [3, 0, 1, 1, 2]
+# p smaller_numbers_than_current([1,4,6,8,13,2,4,5,4]) == [0, 2, 4, 5, 6, 1, 2, 3, 2]
+# p smaller_numbers_than_current([7,7,7,7]) == [0,0,0,0]
+# p smaller_numbers_than_current([6,5,4,8]) == [2, 1, 0, 3]
+# p smaller_numbers_than_current([1]) == [0]
+
+
+# input - array of integers
+# output - integer
+# rules
+#   - return the minimum sum of 5 consequtive intgers in the input array
+#   - input array will only include integers
+#   - input array can contain fewer than 5 elements - return nil if so
+# algorithm
+#   - check length of input array and return nil if less than 5
+#   - set current min sum to 0
+#   - loop through all but last 4 elements of input array
+#   - calculate sum for each set of 5 elements
+#   - if sum if lower than current min sum, replace value
+#   - return final value for the current min sum variable
+
+# def minimum_sum(arr)
+#   return nil if arr.length < 5
+
+#   curr_min_sum = nil
+#   stop_index = arr.length - 6
+
+#   (0..stop_index).each do |index|
+#     sum = arr[index...(index + 5)].sum
+#     curr_min_sum = sum if !curr_min_sum || sum < curr_min_sum
+#   end
+
+#   curr_min_sum
+# end
+
+# p minimum_sum([1, 2, 3, 4]) == nil
+# p minimum_sum([1, 2, 3, 4, 5, 6]) == 15
+# p minimum_sum([55, 2, 6, 5, 1, 2, 9, 3, 5, 100]) == 16
+# p minimum_sum([-1, -5, -3, 0, -1, 2, -4]) == -10
+
+
+# input - string
+# output - new string
+# rules -
+#   - every second character of every third word should be capitalized
+#   - other uppercase characters should be left unchanged
+#   - 
+# algorithm
+#   - keep count of word index and loop through words in the input string
+#   - at every third word (will be one less for index number), loop through all characters
+#   - at every second character (will be every odd index), up case the character
+
+# def to_weird_case(str)
+#   words = []
+
+#   str.split.each_with_index do |word, word_index|
+#     if (word_index + 1) % 3 == 0
+#       new_word = []
+#       word.chars.each_with_index do |char, char_index|
+#         char_index.odd? ? new_word << char.upcase : new_word << char
+#       end
+#       new_word = new_word.join
+
+#       words << new_word
+#     else
+#       words << word
+#     end
+#   end
+
+#   words.join(' ')
+# end
+
+# p to_weird_case('Lorem Ipsum is simply dummy text of the printing') == 'Lorem Ipsum iS simply dummy tExT of the pRiNtInG'
+# p to_weird_case(
+#   'It is a long established fact that a reader will be distracted') ==
+#   'It is a long established fAcT that a rEaDeR will be dIsTrAcTeD'
+# p to_weird_case('aaA bB c') == 'aaA bB c'
+# p to_weird_case(
+#   'Miss Mary Poppins word is supercalifragilisticexpialidocious') ==
+#   'Miss Mary POpPiNs word is sUpErCaLiFrAgIlIsTiCeXpIaLiDoCiOuS'
+
+
+# input - array of integers
+# output - array of 2 integers
+# rules -
+#   - output the 2 elements that are closest in value in the input array
+#   - input arrray will only contain integers
+#   - output should be ordered in the order they show in the input array
+# algorithm
+#   - loop through all but last elements in the array
+#   - compare difference between each element with all other elements
+#   - if difference is less than current smallest difference, set the new value and store elements
+#   - once loop executes, return set of 2 elements
+
+# def closest_numbers(arr)
+#   min_diff = arr.max - arr.min + 1
+#   min_diff_eles = []
+#   mid_index = arr.length / 2
+
+#   (0..arr.length / 2).each do |index1|
+#     next_start_index = index1 + 1
+#     (next_start_index...arr.length).each do |index2|
+#       diff = (arr[index1] - arr[index2]).abs
+#       if diff < min_diff
+#         min_diff = diff
+#         min_diff_eles = [arr[index1], arr[index2]]
+#       end
+#     end
+#   end
+
+#   min_diff_eles
+# end
+
+# p closest_numbers([5, 25, 15, 11, 20]) == [15, 11]
+# p closest_numbers([19, 25, 32, 4, 27, 16]) == [25, 27]
+# p closest_numbers([12, 7, 17]) == [12, 7]
+
+
+# input - string
+# output - string (single character)
+# rules
+#   - output the character that occurs least in the input string
+#   - upper and lowercase are treated equally
+#   - ouput lowercase character even if it only occurs as an uppercase letter
+#   - if there is a tie, output the character that is found earlier in the string
+# algorithm
+#   - split string into characters
+#   - get counts of all characters
+#   - select for the characters that match the minimum count
+#   - output the character that has the lowest index
+
+# def least_common_char(str)
+#   counts = Hash.new(0)
+#   indices = Hash.new(-1)
+
+#   str.downcase.chars.each_with_index do |char, index|
+#     counts[char] += 1
+#     indices[char] = index if indices[char] == -1
+#   end
+
+#   min_count = str.length + 1
+#   min_index = str.length
+#   min_char = ''
+
+#   counts.keys.each do |char|
+#     if counts[char] == min_count
+#       min_index = indices[char] if indices[char] < min_index
+#       min_char = char if indices[char] < min_index
+#     elsif counts[char] < min_count
+#       min_count = counts[char]
+#       min_index = indices[char]
+#       min_char = char
+#     end
+#   end
+
+#   min_char
+# end
+
+# p least_common_char("Hello World") == "h"
+# p least_common_char("Peter Piper picked a peck of pickled peppers") == "t"
+# p least_common_char("Mississippi") == "m"
+# p least_common_char("Happy birthday!") == ' '
+# p least_common_char("aaaaaAAAA") == 'a'
