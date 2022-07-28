@@ -1616,3 +1616,164 @@ require 'pry-byebug'
 # p least_common_char("Mississippi") == "m"
 # p least_common_char("Happy birthday!") == ' '
 # p least_common_char("aaaaaAAAA") == 'a'
+
+
+# # # Rotation (Part 1)
+# def rotate_array(arr)
+#   arr[1..-1] + [arr[0]]
+# end
+
+# # p rotate_array([7, 3, 5, 2, 9, 1]) == [3, 5, 2, 9, 1, 7]
+# # p rotate_array(['a', 'b', 'c']) == ['b', 'c', 'a']
+# # p rotate_array(['a']) == ['a']
+
+# # x = [1, 2, 3, 4]
+# # p rotate_array(x) == [2, 3, 4, 1]   # => true
+# # p x == [1, 2, 3, 4]                 # => true
+
+
+# # Rotation (Part 2)
+# # algorithm
+# #   - convert int to str to array
+# #   - retain same order for all but last n (input 2) elements in the array
+# #   - call rotate function on subset of array
+# #   - combine array into string and convert back to int
+
+# def rotate_rightmost_digits(num, n)
+#   digits = num.to_s.chars
+#   digits[-n..-1] = rotate_array(digits[-n..-1])
+#   digits.join.to_i
+# end
+
+# # p rotate_rightmost_digits(735291, 1) == 735291
+# # p rotate_rightmost_digits(735291, 2) == 735219
+# # p rotate_rightmost_digits(735291, 3) == 735912
+# # p rotate_rightmost_digits(735291, 4) == 732915
+# # p rotate_rightmost_digits(735291, 5) == 752913
+# # p rotate_rightmost_digits(735291, 6) == 352917
+
+
+# # Rotation (Part 3)
+# def max_rotation(num)
+#   digits = num.to_s.chars
+#   digits.length.downto(1).each do |n|
+#     num = rotate_rightmost_digits(num, n)
+#   end
+
+#   num
+# end
+
+# # p max_rotation(735291) == 321579
+# # p max_rotation(3) == 3
+# # p max_rotation(35) == 53
+# # p max_rotation(105) == 15 # the leading zero gets dropped
+# # p max_rotation(8_703_529_146) == 7_321_609_845
+
+
+# # 1000 Lights
+# # input - integer (number of switches and loops)
+# # output - array of light numbers that are still on (starts at 1)
+# # algorithm
+# #   - initialize array of length n of 0s (all lights off)
+# #   - loop through array n times
+# #   - at each iteration, replace 0 with light number if it will be on
+# #   - return array of light numbers that are on
+
+# def switch_lights(num_lights)
+#   lights = [0] * num_lights
+  
+#   1.upto(num_lights).each do |n|
+#     (0...num_lights).each do |index|
+#       if (index + 1) % n == 0
+#         lights[index] == 0 ? lights[index] = index + 1 : lights[index] = 0
+#       else
+#         next
+#       end
+#     end
+#   end
+
+#   lights.select { |light_num| light_num != 0 }
+# end
+
+# # p switch_lights(5)
+# # p switch_lights(10)
+# # p switch_lights(1000)    
+
+
+# # Diamonds!
+# def diamond(n)
+#   num_spaces = (n - 1) / 2
+#   num_stars = 1
+
+#   # top half
+#   until num_spaces == 0
+#     puts "#{' ' * num_spaces}#{'*' * num_stars}"
+#     num_stars += 2
+#     num_spaces -= 1
+#   end
+
+#   puts "#{'*' * n}"
+    
+#   # bottom half
+#   until num_spaces == (n - 1) / 2
+#     num_stars -= 2
+#     num_spaces += 1
+#     puts "#{' ' * num_spaces}#{'*' * num_stars}"
+#   end
+# end
+
+# # diamond(1)
+# # diamond(3)
+# # diamond(9)
+
+
+# # # Fibonacci Numbers (Recursion)
+# # def fibonacci(n)
+# #   return 1 if n == 1 || n == 2
+# #   fibonacci(n - 1) + fibonacci(n - 2)
+# # end
+
+# # Fibonacci Numbers (Procedural)
+# def fibonacci(n)
+#   return 1 if n <= 2
+#   prev_num = 1
+#   curr_num = 1
+#   next_num = 0
+
+#   3.upto(n) do 
+#     next_num = prev_num + curr_num
+#     prev_num = curr_num
+#     curr_num = next_num
+#   end
+
+#   next_num
+# end
+
+
+# # p fibonacci(1)
+# # p fibonacci(2)
+# # p fibonacci(3)
+# # p fibonacci(4)
+# # p fibonacci(5)
+# # p fibonacci(12)
+# # p fibonacci(20)
+# # p fibonacci(100)
+# # p fibonacci(100_001)
+
+
+# # Fibonacci Numbers (Last Digit)
+# def fibonacci_last(n)
+#   first, last = [1, 1]
+#   3.upto(n) do
+#     first, last = [last, (first + last) % 10]
+#   end
+
+#   last
+# end
+
+# p fibonacci_last(15)        # -> 0  (the 15th Fibonacci number is 610)
+# p fibonacci_last(20)        # -> 5 (the 20th Fibonacci number is 6765)
+# p fibonacci_last(100)       # -> 5 (the 100th Fibonacci number is 354224848179261915075)
+# p fibonacci_last(100_001)   # -> 1 (this is a 20899 digit number)
+# p fibonacci_last(1_000_007) # -> 3 (this is a 208989 digit number)
+# p fibonacci_last(123456789) # -> 4
