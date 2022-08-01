@@ -1777,3 +1777,297 @@ require 'pry-byebug'
 # p fibonacci_last(100_001)   # -> 1 (this is a 20899 digit number)
 # p fibonacci_last(1_000_007) # -> 3 (this is a 208989 digit number)
 # p fibonacci_last(123456789) # -> 4
+
+
+# # Longest Sentence
+# # algorithm
+# # split text into sentences
+# # count length of each and output the max sentence length
+
+# text = File.read('text.txt')
+# sentences = text.split(/\.|\?|!/)
+
+# p sentences.map { |sentence| sentence.split.length }.max
+
+
+# # Now I Know My ABCs
+# # input - single word (string)
+# # output - boolean
+# # rules -
+# #   return true if wor only uses one or no characters from each block, but not both
+# #   input string should not be mutated
+# # algorithm
+# #   - represent block as hash
+# #   - loop through keys
+# #   - if key is found in word, check the value at that key
+# #   - if value is also in word return false
+# #   - if loop finishes execution, return true
+
+# BLOCKS = {
+#   'B' => 'O',
+#   'X' => 'K',
+#   'D' => 'Q',
+#   'C' => 'P',
+#   'N' => 'A',
+#   'G' => 'T',
+#   'R' => 'E',
+#   'F' => 'S',
+#   'J' => 'W',
+#   'H' => 'U',
+#   'V' => 'I',
+#   'L' => 'Y',
+#   'Z' => 'M'
+# }
+
+# def block_word?(word)
+#   word = word.upcase.split('')
+#   BLOCKS.keys.each do |key|
+#     if word.include?(key)
+#       return false if word.include?(BLOCKS[key])
+#     end
+#   end
+
+#   true
+# end
+
+# p block_word?('BATCH') == true
+# p block_word?('BUTCH') == false
+# p block_word?('jest') == true
+
+
+# Lettercase Percentage Ratio
+# input - string
+# output - hash
+# rules
+#   - output has will have 3 keys: lowercase, uppercase, and neither
+#   - output percentage (as float) of the ratio of each type of character
+#   - input string will always contain at least one character
+# algorthim
+#   split input string into characters
+#   loop through each character and keep count of what type it is
+#   convert counts to decimals, then multiple by 100
+
+# def letter_percentages(str)
+#   counts = {lowercase: 0, uppercase: 0, neither: 0}
+
+#   str.chars.each do |char|
+#     if char =~ /[a-z]/
+#       counts[:lowercase] += 1
+#     elsif
+#       char =~ /[A-Z]/
+#       counts[:uppercase] += 1
+#     else
+#       counts[:neither] += 1
+#     end
+#   end
+
+#   counts = counts.map do |(key, value)|
+#     value = (value / str.length.to_f) * 100
+#     [key, value]
+#   end.to_h
+
+#   counts
+# end
+
+# p letter_percentages('abCdef 123') == { lowercase: 50.0, uppercase: 10.0, neither: 40.0 }
+# p letter_percentages('AbCd +Ef') == { lowercase: 37.5, uppercase: 37.5, neither: 25.0 }
+# p letter_percentages('123') == { lowercase: 0.0, uppercase: 0.0, neither: 100.0 }
+
+
+
+# Matching Parentheses
+# input - string
+# output - boolean
+# rules
+#   - return true if all parentheses in the string are balanced
+#   - to be properly balanced, parentheses must occur in matching ( ) pairs
+#   - a balanced pair must start with (, not )
+# algorithm
+#   - loop through each character in the string
+#   - if parenthesis is found, keep a running count
+#     - ( has a value of 1, ) has a value of -1
+#   - return false if count is ever negative or if count is not zero at loop execution
+#   - otherwise return true if count is 0
+
+# def balanced?(str)
+#   parentheses_count = 0
+
+#   str.chars.each do |char|
+#     if char.match(/\(/)
+#       parentheses_count += 1
+#     elsif char.match(/\)/)
+#       parentheses_count -= 1
+#       return false if parentheses_count < 0
+#     else
+#       next
+#     end
+#   end
+
+#   parentheses_count == 0 ? true : false
+# end
+
+# p balanced?('What (is) this?') == true
+# p balanced?('What is) this?') == false
+# p balanced?('What (is this?') == false
+# p balanced?('((What) (is this))?') == true
+# p balanced?('((What)) (is this))?') == false
+# p balanced?('Hey!') == true
+# p balanced?(')Hey!(') == false
+# p balanced?('What ((is))) up(') == false
+
+
+# # Triangle Sides
+# # algorithm
+# #   return equilateral if all inputs are equal
+# #   return invalid if longest side is greater than sum of shorter sides or input has a zero
+# #   return isosceles if 2 sides are of equal length, otherwise scalene
+
+# def triangle(side1, side2, side3)
+#   lengths = [side1, side2, side3].sort
+
+#   return :equilateral if side1 == side2 && side2 == side3
+#   return :invalid if lengths.include?(0) || lengths[2] > (lengths[1] + lengths[0])
+
+#   return :isosceles if side1 == side2 || side1 == side3 || side2 == side3
+
+#   :scalene
+# end
+
+# p triangle(3, 3, 3) == :equilateral
+# p triangle(3, 3, 1.5) == :isosceles
+# p triangle(3, 4, 5) == :scalene
+# p triangle(0, 3, 3) == :invalid
+# p triangle(3, 1, 1) == :invalid
+
+
+# # Tri-Angles
+
+# def triangle(angle1, angle2, angle3)
+#   angles = [angle1, angle2, angle3]
+
+#   return :invalid if angles.include?(0) || angles.sum != 180
+#   return :acute if angles.all? { |angle| angle < 90 }
+#   return :obtuse if angles.any? { |angle| angle > 90 }
+
+#   :right
+# end
+
+# p triangle(60, 70, 50) == :acute
+# p triangle(30, 90, 60) == :right
+# p triangle(120, 50, 10) == :obtuse
+# p triangle(0, 90, 90) == :invalid
+# p triangle(50, 50, 50) == :invalid
+
+
+# # Unlucky Days
+# require 'Date'
+
+# def friday_13th(year)
+#   count = 0
+
+#   (1..12).each do |month|
+#     count += 1 if Date.new(year, month, 13).friday?
+#   end
+
+#   count
+# end
+
+# p friday_13th(2015) == 3
+# p friday_13th(1986) == 1
+# p friday_13th(2019) == 2
+
+
+# Next Featured Number Higher than a Given Value
+# input - integer
+# output - integer
+# rules
+#   - return the next featured number after the given integer input
+#   - a featured number is a multiple of 7, whose digits occur exactly once each
+# algorithm
+#   - return an error message if input integer is greater than 9,999,999,999 (will always have a repeating digit)
+#   - starting at input integer, add one and check for featured number
+#   - continue adding 1 until next featured number is found
+
+
+# def is_featured?(num)
+#   digits = num.to_s.chars
+#   return false if num.even? || digits.any? { |digit| digits.count(digit) > 1 }
+
+#   num % 7 == 0 ? true : false
+# end
+
+# def featured(start_num)
+#   until start_num >= 9_876_543_210
+#     next_num = start_num + 1
+#     return next_num if is_featured?(next_num)
+#     start_num += 1
+#   end
+
+#   'No possible feature numbers after this value'
+# end
+
+# p featured(12) == 21
+# p featured(20) == 21
+# p featured(21) == 35
+# p featured(997) == 1029
+# p featured(1029) == 1043
+# p featured(999_999) == 1_023_547
+# p featured(999_999_987) == 1_023_456_987
+
+# p featured(9_999_999_999) # -> There is no possible number that fulfills those requirements
+
+
+
+# # Bubble Sort
+# def bubble_sort!(arr)
+#   n = arr.length
+#   loop do
+#     swapped = false
+#     (1...n).each do |index|
+#       if arr[index - 1] > arr[index]
+#         arr[index - 1], arr[index] = arr[index], arr[index - 1]
+#         swapped = true
+#       end
+#     end
+#     break if !swapped
+#   end
+
+#   nil
+# end
+
+# array = [5, 3]
+# bubble_sort!(array)
+# p array == [3, 5]
+
+# array = [6, 2, 7, 1, 4]
+# bubble_sort!(array)
+# p array == [1, 2, 4, 6, 7]
+
+# array = %w(Sue Pete Alice Tyler Rachel Kim Bonnie)
+# bubble_sort!(array)
+# p array == %w(Alice Bonnie Kim Pete Rachel Sue Tyler)
+
+
+
+# Sum Square - Square Sum
+# input - integer
+# ouput - integer
+# rules
+#   - calculate difference bewteen sum of first n positive integers up to input and sum of squares up to input
+
+def sum_square_difference(end_num)
+  sum_elements = 0
+  sum_squares = 0
+
+  1.upto(end_num) do |num|
+    sum_elements += num
+    sum_squares += num ** 2
+  end
+
+  (sum_elements ** 2) - sum_squares
+end
+
+p sum_square_difference(3) == 22
+p sum_square_difference(10) == 2640
+p sum_square_difference(1) == 0
+p sum_square_difference(100) == 25164150
