@@ -2055,19 +2055,167 @@ require 'pry-byebug'
 # rules
 #   - calculate difference bewteen sum of first n positive integers up to input and sum of squares up to input
 
-def sum_square_difference(end_num)
-  sum_elements = 0
-  sum_squares = 0
+# def sum_square_difference(end_num)
+#   sum_elements = 0
+#   sum_squares = 0
 
-  1.upto(end_num) do |num|
-    sum_elements += num
-    sum_squares += num ** 2
-  end
+#   1.upto(end_num) do |num|
+#     sum_elements += num
+#     sum_squares += num ** 2
+#   end
 
-  (sum_elements ** 2) - sum_squares
-end
+#   (sum_elements ** 2) - sum_squares
+# end
 
-p sum_square_difference(3) == 22
-p sum_square_difference(10) == 2640
-p sum_square_difference(1) == 0
-p sum_square_difference(100) == 25164150
+# p sum_square_difference(3) == 22
+# p sum_square_difference(10) == 2640
+# p sum_square_difference(1) == 0
+# p sum_square_difference(100) == 25164150
+
+
+# # Transpose 3x3 / Transpose MxN
+# # input - 3 x 3 nested array (matrix)
+# # output - 3 x 3 nested array (matrix)
+# # rules
+# #   - return the transposed input array
+# #   - output must be a new array; input array is not mutated
+# # algorithm
+# #   - transposed array 
+# #     - takes the first element of each nested array and makes that the new first row
+# #     - second column becomes the second row
+# #     - third column becomes the third row
+# #   - loop through each column and append elements to each row in the output array
+
+# def transpose(arr)
+#   transposed_arr = []
+  
+#   (0...arr[0].length).each do |col|
+#     transposed_row = []
+#     (0...arr.length).each do |row|
+#       transposed_row << arr[row][col]
+#     end
+#     transposed_arr << transposed_row
+#   end
+
+#   transposed_arr
+# end
+
+# matrix = [
+#   [1, 5, 8],
+#   [4, 7, 2],
+#   [3, 9, 6]
+# ]
+
+# new_matrix = transpose(matrix)
+
+# p new_matrix == [[1, 4, 3], [5, 7, 9], [8, 2, 6]]
+# p matrix == [[1, 5, 8], [4, 7, 2], [3, 9, 6]]
+
+# p transpose([[1, 2, 3, 4]]) == [[1], [2], [3], [4]]
+# p transpose([[1], [2], [3], [4]]) == [[1, 2, 3, 4]]
+# p transpose([[1, 2, 3, 4, 5], [4, 3, 2, 1, 0], [3, 7, 8, 6, 2]]) ==
+#   [[1, 4, 3], [2, 3, 7], [3, 2, 8], [4, 1, 6], [5, 0, 2]]
+# p transpose([[1]]) == [[1]]
+
+
+# # Rotating Matrices
+# # input - nested array (MxN)
+# # output - nested array (NxM)
+# # rules 
+# #   - output array must be a new array; input will not be mutated
+# #   - output the input array rotated 90 degrees
+# # algorithm
+# #   - rotated array
+# #     - new rows become columns in reverse order
+# #   - loop through array from last row to first column; first row to last row
+# #   - append elements from each column to form new rows
+
+# def rotate90(matrix)
+#   rotated_arr = []
+  
+#   num_cols = matrix[0].length
+#   num_rows = matrix.length
+
+#   (0...num_cols).each do |col_index|
+#     new_row = []
+#     (num_rows - 1).downto(0).each do |row_index|
+#       new_row << matrix[row_index][col_index]
+#     end
+#     rotated_arr << new_row
+#   end
+
+#   rotated_arr
+# end
+
+# matrix1 = [
+#   [1, 5, 8],
+#   [4, 7, 2],
+#   [3, 9, 6]
+# ]
+
+# matrix2 = [
+#   [3, 7, 4, 2],
+#   [5, 1, 0, 8]
+# ]
+
+# new_matrix1 = rotate90(matrix1)
+# new_matrix2 = rotate90(matrix2)
+# new_matrix3 = rotate90(rotate90(rotate90(rotate90(matrix2))))
+
+# p new_matrix1 == [[3, 4, 1], [9, 7, 5], [6, 2, 8]]
+# p new_matrix2 == [[5, 3], [1, 7], [0, 4], [8, 2]]
+# p new_matrix3 == matrix2
+
+# # Merge Sorted List
+# # input - 2 arrays
+# # output - single array
+# # rules
+# #   - return new array will all elements from both arrays in order (smallest to largest)
+# #   - cannot use sort method
+# #   - input arrays must not be mutated
+# #   - input arrays will be in sorted order already
+# # algorithm
+# #   - keep track of current index of both arrays
+# #   - compare values at each index
+# #   - add smaller element to output array (or ele from first array if equal)
+# #   - increment index of array that had element added to output array
+# #   - break out of loop if current index is past the last element index of the array
+# #   - add remaining elements from remaining array
+
+# def merge(arr1, arr2)
+#   return arr1 if arr2.empty?
+#   return arr2 if arr1.empty?
+
+#   output = []
+
+#   arr1_index = 0
+#   arr2_index = 0
+
+#   loop do
+#     arr1_ele = arr1[arr1_index]
+#     arr2_ele = arr2[arr2_index]
+
+#     if arr1_ele <= arr2_ele
+#       output << arr1_ele
+#       arr1_index += 1
+#     else
+#       output << arr2_ele
+#       arr2_index += 1
+#     end
+
+#     break if arr1_index == arr1.length || arr2_index == arr2.length
+#   end
+
+#   if arr1_index == arr1.length
+#     output << arr2[arr2_index..-1]
+#   elsif
+#     output << arr1[arr1_index..-1]
+#   end
+
+#   output.flatten
+# end
+
+# p merge([1, 5, 9], [2, 6, 8]) == [1, 2, 5, 6, 8, 9]
+# p merge([1, 1, 3], [2, 2]) == [1, 1, 2, 2, 3]
+# p merge([], [1, 4, 5]) == [1, 4, 5]
+# p merge([1, 4, 5], []) == [1, 4, 5]
