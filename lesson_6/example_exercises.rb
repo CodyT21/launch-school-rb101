@@ -2182,40 +2182,112 @@ require 'pry-byebug'
 # #   - break out of loop if current index is past the last element index of the array
 # #   - add remaining elements from remaining array
 
-# def merge(arr1, arr2)
-#   return arr1 if arr2.empty?
-#   return arr2 if arr1.empty?
+def merge(arr1, arr2)
+  return arr1 if arr2.empty?
+  return arr2 if arr1.empty?
 
-#   output = []
+  output = []
 
-#   arr1_index = 0
-#   arr2_index = 0
+  arr1_index = 0
+  arr2_index = 0
 
-#   loop do
-#     arr1_ele = arr1[arr1_index]
-#     arr2_ele = arr2[arr2_index]
+  loop do
+    arr1_ele = arr1[arr1_index]
+    arr2_ele = arr2[arr2_index]
 
-#     if arr1_ele <= arr2_ele
-#       output << arr1_ele
-#       arr1_index += 1
-#     else
-#       output << arr2_ele
-#       arr2_index += 1
-#     end
+    if arr1_ele <= arr2_ele
+      output << arr1_ele
+      arr1_index += 1
+    else
+      output << arr2_ele
+      arr2_index += 1
+    end
 
-#     break if arr1_index == arr1.length || arr2_index == arr2.length
-#   end
+    break if arr1_index == arr1.length || arr2_index == arr2.length
+  end
 
-#   if arr1_index == arr1.length
-#     output << arr2[arr2_index..-1]
-#   elsif
-#     output << arr1[arr1_index..-1]
-#   end
+  if arr1_index == arr1.length
+    output << arr2[arr2_index..-1]
+  elsif
+    output << arr1[arr1_index..-1]
+  end
 
-#   output.flatten
-# end
+  output.flatten
+end
 
 # p merge([1, 5, 9], [2, 6, 8]) == [1, 2, 5, 6, 8, 9]
 # p merge([1, 1, 3], [2, 2]) == [1, 1, 2, 2, 3]
 # p merge([], [1, 4, 5]) == [1, 4, 5]
 # p merge([1, 4, 5], []) == [1, 4, 5]
+
+
+
+# Merge Sort
+# inputs - array
+# output - array
+# rules
+#   - method will return a sorted version of the input array
+#   - recursion will be used
+# algorithm
+#   first break input array down into nested sub-arrays
+#   merge nested subarrays in sorted order using the merge method
+
+# def merge_sort(arr)
+#   n = arr.length
+#   return arr if n == 1
+
+#   split_index = n / 2
+#   l1 = arr[0...split_index]
+#   l2 = arr[split_index...n]
+
+#   l1 = merge_sort(l1)
+#   l2 = merge_sort(l2)
+
+#   return merge(l1, l2)
+# end
+    
+# p merge_sort([9, 5, 7, 1]) == [1, 5, 7, 9]
+# p merge_sort([5, 3]) == [3, 5]
+# p merge_sort([6, 2, 7, 1, 4]) == [1, 2, 4, 6, 7]
+# p merge_sort(%w(Sue Pete Alice Tyler Rachel Kim Bonnie)) == %w(Alice Bonnie Kim Pete Rachel Sue Tyler)
+# p merge_sort([7, 3, 9, 15, 23, 1, 6, 51, 22, 37, 54, 43, 5, 25, 35, 18, 46]) == [1, 3, 5, 6, 7, 9, 15, 18, 22, 23, 25, 35, 37, 43, 46, 51, 54]
+
+
+# # Egyptian Fractions
+# # input - Rational number
+# # output - array of denominators
+# # algorithms
+# #   - start at denominator of 1
+# #   - subtract 1 / the current denominator from the Rational number input
+# #   - skip denominator if 1 / denom is greater than current total
+# #   - return array of denomintors onces input is 0
+
+# def egyptian(num)
+#   denoms = []
+  
+#   curr_denom = 1
+#   while num > 0
+#     if num >= Rational(1, curr_denom)
+#       num -= Rational(1, curr_denom)
+#       denoms << curr_denom
+#     end
+
+#     curr_denom += 1
+#   end
+
+#   denoms
+# end
+
+# def unegyptian(denoms)
+#   denoms.reduce(0) { |sum, denom| sum += Rational(1, denom) }
+# end
+
+
+# p unegyptian(egyptian(Rational(1, 2))) == Rational(1, 2)
+# p unegyptian(egyptian(Rational(3, 4))) == Rational(3, 4)
+# p unegyptian(egyptian(Rational(39, 20))) == Rational(39, 20)
+# p unegyptian(egyptian(Rational(127, 130))) == Rational(127, 130)
+# p unegyptian(egyptian(Rational(5, 7))) == Rational(5, 7)
+# p unegyptian(egyptian(Rational(1, 1))) == Rational(1, 1)
+# p unegyptian(egyptian(Rational(2, 1))) == Rational(2, 1)
+# p unegyptian(egyptian(Rational(3, 1))) == Rational(3, 1)
