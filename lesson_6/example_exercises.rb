@@ -2291,3 +2291,375 @@ end
 # p unegyptian(egyptian(Rational(1, 1))) == Rational(1, 1)
 # p unegyptian(egyptian(Rational(2, 1))) == Rational(2, 1)
 # p unegyptian(egyptian(Rational(3, 1))) == Rational(3, 1)
+
+
+# # Repeated Substring Pattern
+# # input - string
+# # output - boolean
+# # rules
+# #   - output true if there is a substring of the input string that can be repeated to form the same input string
+# #   - output false if there is not a substring with the above characteristics
+# #   - input string will be a non-empty string
+# #   - input string will only consist of lowercase english letters only
+# # algorithm
+# #   - split string into an array of characters
+# #   - starting with just the first element, determine if it can be multiplied to have same number of chars
+# #   - if yes, check if repeated string is the same as the input string
+# #   - if yes, return true
+# #   - if no, add the next character and repeat the above steps
+# #   - if the middle index is reached and a substring has not been found, return false
+
+# def repeated_substring_pattern(str)
+#   middle_index = str.length / 2
+#   str_length = str.length
+
+#   (0...str_length).each do |index|
+#     substr = str[0..index]
+#     substr_length = substr.length
+#     next if str_length % substr_length != 0
+#     break if index >= middle_index
+
+#     repeats = str_length / substr_length
+#     return true if substr * repeats == str
+#   end
+
+#   false
+# end
+
+# p repeated_substring_pattern('abab') == true
+# p repeated_substring_pattern('aba') == false
+# p repeated_substring_pattern('aabaaba') == false
+# p repeated_substring_pattern('abaababaab') == true
+# p repeated_substring_pattern('abcabcabcabc') == true
+    
+
+# # Common Chars
+# # input - array of strings
+# # output - array of characters
+# # rules
+# #   - return array of letters that are common to all words in the input array
+# #   - duplicate letters count as unique letters (all words but 1 have 2 occurances but 1 only has 1 occurance, return 1 of that letter)
+# #   - if there are no common letters, return an empty array
+# # algorithm
+# #   - loop through all characters in the first word of the array
+# #   - compare each letter with all other words in the input array
+# #   - if character is found in all other words, check the counts of the letters
+# #   - if count of the letter in the output array is less than the min count, add the letter to the output array
+# #   - if count is equal to minimum count already, move to next letter and do not add to output array
+
+# def common_chars(arr)
+#   chars = []
+
+#   arr[0].each_char do |char|
+#     if arr.all? { |word| word.include?(char) }
+#       char_counts = []
+      
+#       arr.each do |word|
+#         char_counts << word.count(char)
+#       end
+
+#       if chars.count(char) < char_counts.min
+#         chars << char
+#       end
+#     end
+#   end
+
+#   chars
+# end
+
+# p common_chars(['bella', 'label', 'roller']) == ['e', 'l', 'l']
+# p common_chars(['cool', 'lock', 'cook']) == ['c', 'o']
+# p common_chars(['hello', 'goodbye', 'booya', 'random']) == ['o']
+# p common_chars(['aabbaaaa', 'ccdddddd', 'eeffee', 'ggrrrrr', 'yyyzzz']) == []
+
+
+# Next Bigger Number
+# inputs - integer
+# output - integer
+# rules
+#   - output the next largest number that can be formed with the same digits in the input
+#   - if there is not a larger integer, return -1
+#   - input will always be a positive integer
+# algorithm
+#   - convert input integer into a string and split into digits
+#   - starting at the last digit, swap with the second to last if the last digit is larger
+#   - if last digit is smaller, loop through string in the reverse manner until a smaller digit is found
+#   - swap digits and return the joined string converted to an int
+#   - if last digit is smaller than all other digits, move to next digit and repeat above process
+
+# def next_bigger_num(num)
+#   digits = num.to_s.chars
+#   start_index = digits.length - 1
+
+#   start_index.downto(1).each do |index1|
+#     (index1 - 1).downto(0) do |index2|
+#       next if digits[index1].to_i <= digits[index2].to_i
+#       digits[index1], digits[index2] = digits[index2], digits[index1]
+#       return digits.join.to_i
+#     end
+#   end
+
+#   -1
+# end
+
+# p next_bigger_num(9) == -1
+# p next_bigger_num(12) == 21
+# p next_bigger_num(513) == 531
+# p next_bigger_num(2017) == 2071
+# p next_bigger_num(111) == -1
+# p next_bigger_num(531) == -1
+# p next_bigger_num(123456789) == 123456798
+
+
+# Max Sequence
+# input - array of integers
+# output - integer
+# rules
+#   - find the max sum of consequtive elements in the input array
+#   - input array can be empty; return 0 in this case
+#   - return 0 if the input array only contains negative elements
+# algorithm
+#   - determine the subarray of nums that can be formed from the input array
+#   - loop through the subarrays and calculate the sum of each
+#   - return the subarray with the largest sum
+
+# def max_sequence(arr)
+#   return 0 if arr.empty? || arr.all? { |num| num < 0 }
+#   return arr.sum if arr.all? { |num| num > 0 }
+
+#   subarrays = []
+#   (0...arr.length).each do |start_index|
+#     (0...arr.length).each do |end_index|
+#       subarrays << arr[start_index..end_index]
+#     end
+#   end
+
+#   subarrays.map { |subarr| subarr.sum }.max
+# end
+
+# p max_sequence([]) == 0
+# p max_sequence([-2, 1, -3, 4, -1, 2, 1, -5, 4]) == 6
+# p max_sequence([11]) == 11
+# p max_sequence([-32]) == 0
+# p max_sequence([-2, 1, -7, 4, -10, 2, 1, 5, 4]) == 12
+
+
+# Common Prefix
+# input - array of strings
+# output - string
+# rules
+#   - output the longest common prefix string amongst all the strings in the array
+#   - if there is not common prefix, output an empty string
+#   - input will only contain an array of strings, not an empty string or other element types
+#   - input strings will only contain lowercase letters
+# algorithm
+#   - take first element of the input array and find all prefixes that can be formed
+#   - check each prefix to see if it starts with the prefix
+#   - if prefix is found and length is largest the current longest prefix, replace output prefix
+
+# def common_prefix(arr)
+#   prefixes = []
+#   (0...arr[0].length).each do |index1|
+#       prefixes << arr[0][0..index1]
+#   end
+
+#   common_prefixes = prefixes.select do |prefix|
+#     arr.all? { |word| word.start_with?(prefix) }
+#   end
+  
+
+#   common_prefixes.empty? ? '' : common_prefixes[-1]
+# end
+
+# p common_prefix(['flower', 'flow', 'flight']) == 'fl'
+# p common_prefix(['dog', 'racecar', 'car']) == ''
+# p common_prefix(['interspecies', 'interstellar', 'interstate']) == 'inters'
+# p common_prefix(['throne', 'throne']) == 'throne'
+
+
+# Substring Test
+# input - 2 strings
+# output - boolean
+# rules
+#   - output true if theree is a substring that appears in both strings
+#   - case does not matter; uppercase and lowercase should be treated as the same
+#   - input can be empty string(s), or have alphanumerical characters
+#   - substring length must be greater than 1
+# algorithm
+#   - if either input string is an empty or 1 character string, return false
+#   - find the smaller of the input strings and find all substrings
+#   - loop through array of substrings and return true if a common substring is found
+#   - if no common susbtrings are found, return false
+
+# def find_substrings(str)
+#   substrs = []
+#   index2_start = 0
+
+#   (0...str.length).each do |index1|
+#     (index2_start...str.length).each do |index2|
+#       substrs << str[index1..index2]
+#     end
+#     index2_start += 1
+#   end
+
+#   substrs.select { |substr| substr.length > 1 }
+# end
+
+# def substring_test(str1, str2)
+#   str1_length = str1.length
+#   str2_length = str2.length
+#   return false if str1_length <= 1 || str2_length <= 1
+
+#   if str1_length < str2_length
+#     substrs = find_substrings(str1.downcase)
+#     return substrs.any? { |substr| str2.downcase.include?(substr) }
+#   else
+#     substrs = find_substrings(str2.downcase)
+#     return substrs.any? { |substr| str1.downcase.include?(substr) }
+#   end
+# end
+
+# p substring_test('Something', 'Fun') == false
+# p substring_test('Something', 'Home') == true
+# p substring_test('Something', 'Fun') == false
+# p substring_test('Something', '') == false
+# p substring_test('BANANA', 'banana') == true
+# p substring_test('test', 'lllt') == false
+# p substring_test('', '') == false
+# p substring_test('1234567', '541265') == true
+# p substring_test('supercaligragilisticexpialidocious', 'SoundOfItIsAtrocious') == true
+
+
+# Scramble
+# input - 2 strings
+# output - boolean
+# rules
+#   - return true if substring of string 1 can be rearranged to make string 2
+#   - input strings will only contain lowercase letters, no letters or punctuation
+#   - input strings will not be empty strings
+#   - substrings must be more than 1 character
+# algorithm
+#   - take first string char array and find all substrings that can be made
+#   - loops through substrings
+#   - determine counts of all letters in substring and all corresponding letters in second input string
+#   - if counts of letters in second input string is greater than or equal to substring char counts, return true
+#   - if loop execution finishes execution without finding a match, return false
+
+# def scramble(str1, str2)
+#   str1_counts = Hash.new(0)
+#   str2_counts = Hash.new(0)
+
+#   str1.each_char { |char| str1_counts[char] += 1 }
+#   str2.each_char { |char| str2_counts[char] += 1 }
+
+#   str2.each_char do |char|
+#     return false if str1_counts[char] < str2_counts[char]
+#   end
+
+#   true
+# end
+
+# p scramble('javaass', 'jjss') == false
+# p scramble('rkqodlw', 'world') == true
+# p scramble('codewaraaossoqqyt', 'codewars') == true
+# p scramble('katas', 'steak') == false
+# p scramble('scriptjava', 'javascript') == true
+# p scramble('scriptingjava', 'javascript') == true
+
+
+# Longest Palindrome
+# input - string
+# output - integer
+# rules
+#   - output length of the longest substring in the input string that is a palindrome
+#   - if input is an empty string, return 0
+#   - single characters count as palindromes with length 1
+#   - only lower case letters will be in the input string
+# algorithm
+#   - find all substrings in the input array
+#   - loop through all substrings and determine if substring is a palindrome
+#   - of the remaining palindrome substrings, return the length of the largest substring
+
+# def find_substrings(str)
+#   substrs = []
+#   (0...str.length).each do |index1|
+#     (index1...str.length).each do |index2|
+#       substrs << str[index1..index2]
+#     end
+#   end
+
+#   substrs
+# end
+
+# def is_palindrome?(str)
+#   reverse_str = ''
+#   (str.length - 1).downto(0).each do |index|
+#     reverse_str += str[index]
+#   end
+
+#   str == reverse_str
+# end
+
+# def longest_palindrome(str)
+#   substrs = find_substrings(str)
+#   substrs.select! { |substr| is_palindrome?(substr) }
+  
+#   max_length = 0
+#   substrs.each do |substr|
+#     max_length = substr.length if substr.length > max_length
+#   end
+
+#   max_length
+# end
+
+
+# p longest_palindrome('a') == 1
+# p longest_palindrome('aa') == 2
+# p longest_palindrome('baa') == 2
+# p longest_palindrome('aab') == 2
+# p longest_palindrome('baabcd') == 4
+# p longest_palindrome('baablkj12345432133d') == 9
+
+# Find Even Index
+# input - array of integers
+# output - integer
+# rules
+#   - return the index where the sum of the left side if the array is equal to the right side
+#   - at index 0, the left side adds to 0 (empty array)
+#   - input array will always contain some values
+#   - if there is not an index that satisfies this, return -1
+#   - the element value at the current indec is not counted
+# algorithm
+#   - check if sum of array is 0, return 0 if so
+#   - starting at index 1, split array into 2 arrays, left half and right half
+#   - end loop execution at the second to last index
+#   - at each index, calculate the sum of each sub array
+#   - if sums are equal return the index
+#   - if loop execution ends, check sum of all, but last element and return last index if sum is 0
+#   - return -1 if no indices are found
+
+def find_even_index(arr)
+  return 0 if arr[1..-1].sum == 0
+
+  (1...arr.length).each do |index|
+    if index == arr.length - 1
+      return index if arr[0..-2].sum == 0
+    end
+
+    left_side = arr[0...index]
+    right_side = arr[(index + 1)..arr.length]
+
+    return index if left_side.sum == right_side.sum
+  end
+
+  -1
+end 
+
+  p find_even_index([1, 2, 3, 4, 3, 2, 1]) == 3
+  p find_even_index([1, 100, 50, -51, 1, 1]) == 1
+  p find_even_index([1, 2, 3, 4, 5, 6]) == -1
+  p find_even_index([20, 10, 30, 10, 10, 15, 35]) == 3
+  p find_even_index([20, 10, -80, 10, 10, 15, 35]) == 0
+  p find_even_index([10, -80, 10, 10, 15, 35, 20]) == 6
+  p find_even_index([-1, -2, -3, -4, -3, -2, -1]) == 3
+
